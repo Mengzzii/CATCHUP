@@ -1,0 +1,27 @@
+.body {
+  padding: 20px;
+  display: block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.input {
+  display: block;
+  text-align: center;
+}
+.signup {
+  text-decoration: none;
+  cursor: pointer;
+}
+.signup:visited {
+  color: black;
+}
+.signup:hover {
+  color: rgb(255, 183, 183);
+}
