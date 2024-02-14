@@ -27,7 +27,6 @@ export default function SignUp() {
       </div>
       <br />
       <br />
-      <br />
       <span className={styles.loginButton}>
         <SubmitButton message={"회원가입"} />
       </span>
