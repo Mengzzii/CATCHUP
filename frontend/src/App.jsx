@@ -13,7 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/classchat" element={<Classchat />} />
-        <Route path="/contentschat" element={<Contentchat />} />
+        <Route path="/contentchat" element={<Contentchat />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Main1 />} />

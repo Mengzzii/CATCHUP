@@ -1,22 +1,47 @@
 .home {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-  
+
 .container {
   flex: 1;
   display: flex;
-  background: pink;
 }
 
 .Main1_left {
-    flex-basis: 50%;
-    background: blue;
+  flex-basis: 57%;
+  background: lightgrey;
 }
 
-.home > .container > .Main1_rignt {
-    flex-basis: 50%;
-    background: gray;
+.Main1_rignt {
+  flex-basis: 43%;
+}
+
+.btn {
+  color: black;
+  background: white;
+  padding: 0.55rem 1.25rem;
+  width: 130px;
+  height: 50px;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.text {
+  color: #fb6d6d;
+  font-weight: bolder;
+  font-size: 30px;
+  line-height: 2em;
+  padding-top: 8em;
+  padding-left: 7em;
+}
+
+.main2contents {
+  padding-top: 16em;
+  padding-left: 12em;
 }
