@@ -1,18 +1,23 @@
 import React from "react";
-import Login_button from "../components/Login_button";
-import Signup_bt from "../components/Signup_bt";
+import Main1_r_login from "./Main1_r_login";
+import Main1_r_signup from "./Main1_r_signup";
+import styles from "../css/Main1.module.css";
 import { Link } from "react-router-dom";
 
 const Main1_right = () => {
   return (
-    <div>
-      <div>시작하기</div>
-      <Link to="/signup">
-        <Signup_bt />
-      </Link>
-      <Link to="/login">
-        <Login_button />
-      </Link>
+    <div className={styles.Main1_right}>
+      <div className={styles.main2contents}>
+        <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;시작하기</h1>
+        <br />
+        <Link to="/signup">
+          <Main1_r_login />
+        </Link>
+        &nbsp;&nbsp;&nbsp;
+        <Link to="/login">
+          <Main1_r_signup />
+        </Link>
+      </div>
     </div>
   );
 };
