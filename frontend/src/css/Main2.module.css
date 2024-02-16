@@ -3,13 +3,11 @@
   height: 100%;
   display: flex;
 }
-
 .container {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
-
 .top {
   flex-basis: 10%;
   padding-right: 2%;
@@ -17,14 +15,12 @@
   justify-content: flex-end;
   align-items: center;
 }
-
 .logo {
   flex-basis: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .middle {
   flex-basis: 50%;
   display: flex;

@@ -4,21 +4,17 @@
   display: flex;
   flex-direction: column;
 }
-
 .container {
   flex: 1;
   display: flex;
 }
-
 .Main1_left {
   flex-basis: 57%;
   background: lightgrey;
 }
-
 .Main1_rignt {
   flex-basis: 43%;
 }
-
 .btn {
   color: black;
   background: white;
