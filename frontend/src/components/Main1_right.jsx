@@ -11,11 +11,11 @@ const Main1_right = () => {
         <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;시작하기</h1>
         <br />
         <Link to="/signup">
-          <Main1_r_login />
+          <Main1_r_signup />
         </Link>
         &nbsp;&nbsp;&nbsp;
         <Link to="/login">
-          <Main1_r_signup />
+          <Main1_r_login />
         </Link>
       </div>
     </div>
