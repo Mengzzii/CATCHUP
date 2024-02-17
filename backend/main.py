@@ -5,14 +5,6 @@ from src.db.connection import (
     create_user
 )
 
-# from database import (
-#     fetch_one_todo,
-#     fetch_all_todos,
-#     create_todo,
-#     update_todo,
-#     remove_todo,
-# )
-
 # an HTTP-specific exception class  to generate exception information
 #Cross Origin(Protocol, domain, port) Recource Share : 
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,6 +15,7 @@ origins = [
     "http://localhost:3000",
 ]
 
+from src.controller.user_controllers import signup_user
 
 @app.post("/user", response_model=User)
 async def post_user(user: User):
@@ -31,10 +24,14 @@ async def post_user(user: User):
         return response
     raise HTTPException(400, "Something went wrong")
 
-##
+#mengzzii's part
 @app.post("/user/signup", response_model=User)
 async def post_user_signup(user: User):
-    return 1
+    response = await signup_user(user)
+    if response:
+        return response
+    raise HTTPException(200, "Failed to register user")
+    
 
 @app.post("/user/login", response_model=User)
 async def post_user_signup(user: User):
