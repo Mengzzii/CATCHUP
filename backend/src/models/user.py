@@ -10,8 +10,9 @@ class Chat(BaseModel):
 class User(BaseModel):
     name: str
     email: str
+    id: str
     password: str
     chats: List[Chat]
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
