@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
-
-from src.models.user import User
+from src.models.user import User, usersignup
 from src.db.connection import (
     create_user
 )
+from src.controller.user_controllers import signup_user
 
 # an HTTP-specific exception class  to generate exception information
 #Cross Origin(Protocol, domain, port) Recource Share : 
@@ -15,7 +15,10 @@ origins = [
     "http://localhost:3000",
 ]
 
-from src.controller.user_controllers import signup_user
+@app.get('/')
+def index():
+    return{"name":"First Data"}
+
 
 @app.post("/user", response_model=User)
 async def post_user(user: User):
@@ -24,13 +27,14 @@ async def post_user(user: User):
         return response
     raise HTTPException(400, "Something went wrong")
 
-#mengzzii's part
-@app.post("/user/signup", response_model=User)
-async def post_user_signup(user: User):
+
+@app.post("/user/signup", response_model=usersignup)
+async def post_user_signup(user: usersignup):
     response = await signup_user(user)
     if response:
         return response
-    raise HTTPException(200, "Failed to register user")
+    else:
+        raise HTTPException(400, "Something went wrong")
     
 
 @app.post("/user/login", response_model=User)
