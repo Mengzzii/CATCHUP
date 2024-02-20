@@ -1,15 +1,9 @@
 #테스트용 (mina)
-import motor.motor_asyncio
 from fastapi import HTTPException
 from ..models.user import User
 from ..db.connection import collection
 #from passlib.hash import bcrypt
 import bcrypt
-
-#이 파일과 mongoDB 연결
-#client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
-#database = client.Test
-#collection = database.users
 
 #로그인 테스트 위해 비밀번호 암호화 구현
 async def create_user_test(user):
@@ -22,10 +16,6 @@ async def create_user_test(user):
     #await collection.insert_one(document) 이렇게 썼을 때의 차이가 있을까
     #collection.insert_one(document) 이렇게 쓰면 동기라는데 괜찮나
     return document
-
-async def remove_user(name):
-    await collection.delete_one({"name": name})
-    return True
 
 #해당 id의 회원이 존재하는지 확인, 존재하면 해당 id를 가지는 객체 하나를 반환
 async def get_user(id):

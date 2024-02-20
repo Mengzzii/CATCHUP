@@ -1,19 +1,16 @@
-from fastapi import FastAPI, HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordRequestForm
-
 from src.models.user import User
-from src.db.connection import create_user
-#민아 테스트용
-#from src.controller.user_controllers import ()
-from src.db.test import (create_user_test, remove_user, get_user, login_user)
-#민아
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status, Depends
 from src.models.user import User, usersignup
 from src.db.connection import (
     create_user,
     chat_completion
 )
 from src.controller.user_controllers import signup_user
+#민아
+#from src.controller.user_controllers import ()
+from fastapi.security import OAuth2PasswordRequestForm
+from src.controller.test import (create_user_test, get_user, login_user)
+#민아
 
 # an HTTP-specific exception class  to generate exception information
 #Cross Origin(Protocol, domain, port) Recource Share : 
@@ -38,31 +35,6 @@ app.add_middleware(
 def index():
     return{"name":"First Data"}
 
-
-#mengzzii's part
-# @app.post("/user/signup", response_model=User)
-# async def post_user_signup(user: User):
-#     response = await signup_user(user)
-#     if response:
-#         return response
-#     raise HTTPException(200, "Failed to register user")
-    
-#민아 여기부터
-@app.post("/user", response_model=User)
-async def post_user(user: User):
-    #response = await create_user(user.model_dump()) 로는 오류떠서 바꿈
-    response = await create_user_test(user)
-    if response:
-        return response
-    raise HTTPException(400, "Something went wrong")
-
-@app.delete("/api/todo/{name}")
-async def delete_user(name):
-    response = await remove_user(name)
-    if response:
-        return {"message": f"Successfully deleted user: {name}"}
-    raise HTTPException(404, f"There is no user with the name {name}")
-
 @app.post("/user/signup", response_model=usersignup)
 async def post_user_signup(user: usersignup):
     response = await signup_user(user)
@@ -70,6 +42,15 @@ async def post_user_signup(user: usersignup):
         return response
     else:
         raise HTTPException(400, "Something went wrong")
+
+#민아 여기부터
+@app.post("/user", response_model=User)
+async def post_user_test(user: User):
+    #response = await create_user(user.model_dump()) 로는 오류떠서 바꿈
+    response = await create_user_test(user)
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong")
     
 @app.post("/user/login")
 async def post_user_login(user: User):
