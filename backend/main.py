@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException
 
 from src.models.user import User
 from src.db.connection import (
     create_user
+)
+from src.controller.chat_controller import (
+    chat_completion
 )
 
 # an HTTP-specific exception class  to generate exception information
@@ -38,6 +41,8 @@ async def post_user_signup(user: User):
     return 1
 
 @app.post("/chat/new", response_model=User)
-async def post_new_chat(user: User):
-    return 1
-##
+async def post_new_chat(user: User, message:str):
+    response = await chat_completion(user, message)
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
