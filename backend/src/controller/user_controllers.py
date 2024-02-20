@@ -3,7 +3,6 @@ import motor.motor_asyncio
 from passlib.hash import bcrypt
 from ..models.user import User
 
-client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
 # database = client.Check
 # collection = database.new
 

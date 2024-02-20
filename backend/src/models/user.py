@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 import uuid
 
 class Chat(BaseModel):
@@ -12,7 +12,7 @@ class User(BaseModel):
     email: str
     id: str
     password: str
-    chats: List[Chat]
+    chats: Optional[List[Chat]] = []
 
     # class Config:
     #     orm_mode = True

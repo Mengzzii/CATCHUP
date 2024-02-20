@@ -2,7 +2,7 @@
 import motor.motor_asyncio
 from ..models.user import User
 
-password = 'e7DlK9sKDeMAuwVk'
+password = 'veGyue6hfhqurykH'
 MONGO_URL = f"mongodb+srv://estherliu919:{password}@cluster0.dy560h4.mongodb.net/"
 
 #이 파일과 mongoDB 연결
