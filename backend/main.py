@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from src.models.user import User, usersignup
 from src.db.connection import (
-    create_user
+    create_user,
+    chat_completion
 )
 from src.controller.user_controllers import signup_user
 
@@ -50,6 +51,8 @@ async def post_user_signup(user: User):
     return 1
 
 @app.post("/chat/new", response_model=User)
-async def post_new_chat(user: User):
-    return 1
-##
+async def post_new_chat(user_id: str, message:str):
+    response = await chat_completion(user_id, message)
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
