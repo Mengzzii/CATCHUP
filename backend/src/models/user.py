@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field
+from fastapi import HTTPException
+from pydantic import BaseModel, EmailStr, validator
 from typing import List
 import uuid
 
@@ -13,6 +14,28 @@ class User(BaseModel):
     id: str
     password: str
     chats: List[Chat]
-
     # class Config:
     #     orm_mode = True
+
+class Chatroom(BaseModel):
+    userId: str
+    chatId: str = str(uuid.uuid4())
+    chats: List[Chat]
+
+class usersignup(BaseModel):
+    name: str
+    email: EmailStr
+    id: str
+    password: str
+    # 필수 입력 값에서 제외
+    chatroomList: List[Chatroom] | None = None
+    
+    @validator("password")
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise HTTPException(422, "Need 8 characters at least!")
+        if not any(char.isdigit() for char in v):
+            raise HTTPException(422, "Need number!")
+        if not any(char.isalpha() for char in v):
+            raise HTTPException(422, "Need alphabet!")
+        return v
