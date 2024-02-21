@@ -5,11 +5,12 @@ from src.db.connection import (
     create_user,
     chat_completion
 )
+from src.controller.user_controllers import signup_user
 #민아
 #from src.controller.user_controllers import ()
 from fastapi.security import OAuth2PasswordRequestForm
+from src.models.user import User_test
 from src.controller.test import (create_user_test, get_user, login_user)
-from src.controller.user_controllers import signup_user
 #민아
 
 # an HTTP-specific exception class  to generate exception information
@@ -44,8 +45,8 @@ async def post_user_signup(user: User):
         raise HTTPException(400, "Something went wrong")
 
 #민아 여기부터
-@app.post("/user", response_model=User)
-async def post_user_test(user: User):
+@app.post("/user/login/test", response_model=User_test)
+async def post_user_test(user: User_test):
     #response = await create_user(user.model_dump()) 로는 오류떠서 바꿈
     response = await create_user_test(user)
     if response:
@@ -53,7 +54,7 @@ async def post_user_test(user: User):
     raise HTTPException(400, "Something went wrong")
     
 @app.post("/user/login")
-async def post_user_login(user: User):
+async def post_user_login(user: User_test):
 #async def create_token(
 #    form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm)
 #):
