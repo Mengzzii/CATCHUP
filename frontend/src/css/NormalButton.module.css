@@ -1,0 +1,8 @@
+.NormalButton {
+  background-color: rgb(255, 183, 183);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+}
