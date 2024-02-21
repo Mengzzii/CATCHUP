@@ -8,9 +8,15 @@ class Chat(BaseModel):
     role: str
     content: str
 
+class Concept(BaseModel):
+    name: str
+    conceptId: str = str(uuid.uuid4())
+    chatList: List[Chat]
+
 class Classroom(BaseModel):
     classroomName: str
     classroomId: str = str(uuid.uuid4())
+    conceptList: List[Concept]
     chatList: List[Chat]
 
 class User(BaseModel):
