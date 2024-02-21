@@ -1,6 +1,6 @@
 from fastapi import HTTPException
-from pydantic import BaseModel, EmailStr, validator
-from typing import List
+from pydantic import BaseModel, validator, EmailStr
+from typing import List, Optional
 import uuid
 
 class Chat(BaseModel):
@@ -13,7 +13,8 @@ class User(BaseModel):
     email: str
     id: str
     password: str
-    chats: List[Chat]
+    chats: Optional[List[Chat]] = []
+
     # class Config:
     #     orm_mode = True
 

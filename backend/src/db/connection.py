@@ -6,7 +6,6 @@ from ..models.user import User
 from ..controller.chat_controller import (openai_config)
 import uuid
 
-
 password = 'veGyue6hfhqurykH'
 MONGO_URL = f"mongodb+srv://estherliu919:{password}@cluster0.dy560h4.mongodb.net/"
 
