@@ -1,15 +1,15 @@
 from src.models.user import User
 from fastapi import FastAPI, HTTPException, status, Depends
-from src.models.user import User, usersignup
+from src.models.user import User
 from src.db.connection import (
     create_user,
     chat_completion
 )
-from src.controller.user_controllers import signup_user
 #민아
 #from src.controller.user_controllers import ()
 from fastapi.security import OAuth2PasswordRequestForm
 from src.controller.test import (create_user_test, get_user, login_user)
+from src.controller.user_controllers import signup_user
 #민아
 
 # an HTTP-specific exception class  to generate exception information
@@ -35,8 +35,8 @@ app.add_middleware(
 def index():
     return{"name":"First Data"}
 
-@app.post("/user/signup", response_model=usersignup)
-async def post_user_signup(user: usersignup):
+@app.post("/user/signup", response_model=User)
+async def post_user_signup(user: User):
     response = await signup_user(user)
     if response:
         return response
