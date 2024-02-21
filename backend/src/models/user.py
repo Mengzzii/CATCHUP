@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from pydantic import BaseModel, validator, EmailStr
-from typing import List, Optional
+from typing import List
 import uuid
 
 class Chat(BaseModel):
@@ -8,28 +8,18 @@ class Chat(BaseModel):
     role: str
     content: str
 
+class Classroom(BaseModel):
+    classroomName: str
+    classroomId: str = str(uuid.uuid4())
+    chatList: List[Chat]
+
 class User(BaseModel):
-    name: str
-    email: str
-    id: str
-    password: str
-    chats: Optional[List[Chat]] = []
-
-    # class Config:
-    #     orm_mode = True
-
-class Chatroom(BaseModel):
-    userId: str
-    chatId: str = str(uuid.uuid4())
-    chats: List[Chat]
-
-class usersignup(BaseModel):
     name: str
     email: EmailStr
     id: str
     password: str
     # 필수 입력 값에서 제외
-    chatroomList: List[Chatroom] | None = None
+    classroomList: List[Classroom] | None = None
     
     @validator("password")
     def validate_password(cls, v):
