@@ -1,6 +1,5 @@
 #테스트용 (mina)
 from fastapi import HTTPException
-from ..models.user import User
 from ..db.connection import collection
 #from passlib.hash import bcrypt
 import bcrypt

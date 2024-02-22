@@ -6,8 +6,13 @@ from ..models.user import User
 from ..controller.chat_controller import (openai_config)
 import uuid
 
-password = 'veGyue6hfhqurykH'
-MONGO_URL = f"mongodb+srv://estherliu919:{password}@cluster0.dy560h4.mongodb.net/"
+from dotenv import load_dotenv
+import os
+# load_dotenv()
+
+user = os.environ.get("MONGODB_USER_NAME")
+password = os.environ.get("MONGODB_PASSWORD")
+MONGO_URL = f"mongodb+srv://{user}:{password}@cluster0.dy560h4.mongodb.net/"
 
 #이 파일과 mongoDB 연결
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URL)

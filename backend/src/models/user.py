@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from pydantic import BaseModel, validator, EmailStr
-from typing import List, Optional
+from typing import List
 import uuid
 
 class Chat(BaseModel):
@@ -8,28 +8,24 @@ class Chat(BaseModel):
     role: str
     content: str
 
-class User(BaseModel):
+class Concept(BaseModel):
     name: str
-    email: str
-    id: str
-    password: str
-    chats: Optional[List[Chat]] = []
+    conceptId: str = str(uuid.uuid4())
+    chatList: List[Chat]
 
-    # class Config:
-    #     orm_mode = True
+class Classroom(BaseModel):
+    classroomName: str
+    classroomId: str = str(uuid.uuid4())
+    conceptList: List[Concept]
+    chatList: List[Chat]
 
-class Chatroom(BaseModel):
-    userId: str
-    chatId: str = str(uuid.uuid4())
-    chats: List[Chat]
-
-class usersignup(BaseModel):
+class User(BaseModel):
     name: str
     email: EmailStr
     id: str
     password: str
     # 필수 입력 값에서 제외
-    chatroomList: List[Chatroom] | None = None
+    classroomList: List[Classroom] | None = None
     
     @validator("password")
     def validate_password(cls, v):
@@ -40,3 +36,11 @@ class usersignup(BaseModel):
         if not any(char.isalpha() for char in v):
             raise HTTPException(422, "Need alphabet!")
         return v
+    
+class User_test(BaseModel):
+    name: str
+    email: str
+    id: str
+    password: str
+    # 필수 입력 값에서 제외
+    classroomList: List[Chat] | None = None

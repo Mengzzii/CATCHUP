@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from passlib.hash import bcrypt
+import bcrypt
 from ..db.connection import collection
 
 async def signup_user(user):
@@ -9,7 +9,7 @@ async def signup_user(user):
     existing_id = await collection.find_one({"id":user.id})
     if existing_id:
         raise HTTPException(400, "This Id is already used!")
-    hashed_password = bcrypt.hash(user.password)
+    hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
     document = {"name": user.name, "email": user.email, "id": user.id, "password": hashed_password}
     collection.insert_one(document)
     return document

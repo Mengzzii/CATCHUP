@@ -1,6 +1,6 @@
 from src.models.user import User
 from fastapi import FastAPI, HTTPException, status, Depends
-from src.models.user import User, usersignup
+from src.models.user import User
 from src.db.connection import (
     create_user,
     chat_completion
@@ -9,6 +9,7 @@ from src.controller.user_controllers import signup_user
 #민아
 #from src.controller.user_controllers import ()
 from fastapi.security import OAuth2PasswordRequestForm
+from src.models.user import User_test
 from src.controller.test import (create_user_test, get_user, login_user)
 #민아
 
@@ -25,7 +26,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
@@ -35,8 +36,8 @@ app.add_middleware(
 def index():
     return{"name":"First Data"}
 
-@app.post("/user/signup", response_model=usersignup)
-async def post_user_signup(user: usersignup):
+@app.post("/user/signup", response_model=User)
+async def post_user_signup(user: User):
     response = await signup_user(user)
     if response:
         return response
@@ -44,8 +45,8 @@ async def post_user_signup(user: usersignup):
         raise HTTPException(400, "Something went wrong")
 
 #민아 여기부터
-@app.post("/user", response_model=User)
-async def post_user_test(user: User):
+@app.post("/user/login/test", response_model=User_test)
+async def post_user_test(user: User_test):
     #response = await create_user(user.model_dump()) 로는 오류떠서 바꿈
     response = await create_user_test(user)
     if response:
@@ -53,7 +54,7 @@ async def post_user_test(user: User):
     raise HTTPException(400, "Something went wrong")
     
 @app.post("/user/login")
-async def post_user_login(user: User):
+async def post_user_login(user: User_test):
 #async def create_token(
 #    form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm)
 #):
