@@ -1,5 +1,7 @@
+import uuid
 from fastapi import HTTPException
 import bcrypt
+from src.models.user import Chat, Classroom, User
 from ..db.connection import collection
 import datetime
 import jwt
@@ -34,3 +36,28 @@ async def create_token(id):
                "exp": datetime.datetime.now()+datetime.timedelta(minutes=30)}
     token = jwt.encode(payload, "secret", algorithm="HS256")
     return token
+
+# 강의실 생성
+async def create_classroom(user_id, msg: str):
+    # 새로 생성한 클래스룸 ID
+    new_classroom_id = str(uuid.uuid4())
+    # 사용자를 데이터베이스에서 찾기
+    user = await collection.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    # 사용자 객체가 딕셔너리가 아닌 User 모델의 인스턴스인지 확인
+    if isinstance(user, dict):
+        user = User(**user)
+    # 새로운 클래스룸 생성
+    new_classroom = Classroom(classroomId=new_classroom_id, classroomName="First Classroom", conceptList=[], chatList=[Chat(content=msg, role="user")])
+    # 사용자의 클래스룸 리스트에 새로운 클래스룸 추가
+    if not user.classroomList:
+        user.classroomList = [new_classroom]
+    else:
+        user.classroomList.append(new_classroom)
+    # 사용자 업데이트
+    await collection.update_one(
+        {"id": user_id},
+        {"$set": {"classroomList": [classroom.dict() for classroom in user.classroomList]}}
+    )
+    return new_classroom_id
