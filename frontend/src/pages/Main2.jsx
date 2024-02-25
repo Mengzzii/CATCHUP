@@ -1,5 +1,4 @@
-//홈_로그인 후
-//'/home'을 주소 뒤에 붙인다
+//"/home"_로그인 후 홈화면
 import Main2_top from "../components/Main2_top";
 import Main2_new from "../components/Main2_new";
 import Main2_class from "../components/Main2_class";
