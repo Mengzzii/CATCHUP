@@ -1,17 +1,10 @@
 from src.models.user import User
 from fastapi import FastAPI, HTTPException, status, Depends
 from src.models.user import User
-from src.db.connection import (
-    create_user,
-    chat_completion
-)
-from src.controller.user_controllers import signup_user
-#민아
-#from src.controller.user_controllers import ()
-from fastapi.security import OAuth2PasswordRequestForm
-from src.models.user import User_test
-from src.controller.test import (create_user_test, get_user, login_user)
-#민아
+from src.db.connection import chat_completion
+from src.controller.user_controllers import (
+    signup_user, get_user, login_user, create_token )
+# from fastapi.security import OAuth2PasswordRequestForm
 
 # an HTTP-specific exception class  to generate exception information
 #Cross Origin(Protocol, domain, port) Recource Share : 
@@ -44,20 +37,12 @@ async def post_user_signup(user: User):
     else:
         raise HTTPException(400, "Something went wrong")
 
-#민아 여기부터
-@app.post("/user/login/test", response_model=User_test)
-async def post_user_test(user: User_test):
-    #response = await create_user(user.model_dump()) 로는 오류떠서 바꿈
-    response = await create_user_test(user)
-    if response:
-        return response
-    raise HTTPException(400, "Something went wrong")
-    
 @app.post("/user/login")
-async def post_user_login(user: User_test):
+async def post_user_login(user: User):
 #async def create_token(
 #    form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm)
-#):
+#): 
+#로그인 시 받아줄 폼을 OAuth2PasswordRequestForm를 사용, python-multipart 필요함
     #회원 존재하는지 확인
     user_exist = await get_user(user.id)
     if not user_exist:
@@ -66,11 +51,12 @@ async def post_user_login(user: User_test):
     res = await login_user(user.password, user_exist['password'])
     if not res:
         raise HTTPException(401, detail="wrong pswd")
-    return {"msg":"login successful"}
-#민아 여기까지
+    #토큰 생성-유효기간은 30분으로 설정함
+    token = await create_token(user.id)
+    return {"success":"login successful", "token": token}
 
 @app.post("/chat/new", response_model=User)
-async def post_new_chat(user_id: str, message:str):
+async def post_new_chat(user_id: str, message: str):
     response = await chat_completion(user_id, message)
     if response:
         return response
