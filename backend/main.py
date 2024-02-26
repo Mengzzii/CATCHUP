@@ -3,8 +3,9 @@ from fastapi import FastAPI, HTTPException, status, Depends
 from src.models.user import User
 from src.db.connection import (
     create_user,
-    chat_completion
+    
 )
+from src.controller.chat_controller import (chat_completion, get_sample_chat)
 from src.controller.user_controllers import signup_user
 #민아
 #from src.controller.user_controllers import ()
@@ -35,6 +36,15 @@ app.add_middleware(
 @app.get('/')
 def index():
     return{"name":"First Data"}
+
+@app.get('/sample/getallchats/{id}')
+async def get_sample_all_chats(id:str):
+    response = await get_sample_chat(id)
+    if response:
+        return response
+    else:
+        raise HTTPException(400, "Something went wrong")
+
 
 @app.post("/user/signup", response_model=User)
 async def post_user_signup(user: User):
