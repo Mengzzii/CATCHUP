@@ -36,11 +36,3 @@ class User(BaseModel):
         if not any(char.isalpha() for char in v):
             raise HTTPException(422, "Need alphabet!")
         return v
-    
-class User_test(BaseModel):
-    name: str
-    email: str
-    id: str
-    password: str
-    # 필수 입력 값에서 제외
-    classroomList: List[Chat] | None = None
