@@ -2,7 +2,7 @@ from typing import Dict, List
 from src.models.user import User
 from fastapi import FastAPI, HTTPException, status, Depends
 from src.models.user import User
-from src.db.connection import 
+from src.db.connection import collection
 from src.controller.chat_controller import (chat_completion, get_sample_chat)
 from src.controller.user_controllers import (
     signup_user, get_user, login_user, create_token, create_classroom )
@@ -67,9 +67,9 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token}
 
-@app.post("/chat/new", response_model=User)
-async def post_new_chat(user_id: str, message: str):
-    response = await chat_completion(user_id, message)
+@app.post("/chat/new/{user_id}/{classroom_name}/{message}", response_model=User)
+async def post_new_chat(user_id: str, message: str, classroom_name:str):
+    response = await chat_completion(user_id, message, classroom_name)
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")
