@@ -2,8 +2,8 @@ import React, { useEffect, useLayoutEffect, useRef, useState }  from 'react'
 import ChatItem from "../components/ChatItem";
 import axios from 'axios';
 
-const getUserChats = async () => {
-    try {const res = await axios.get("http://127.0.0.1:8000/sample/getallchats/hello");
+const getUserChats = async (id) => {
+    try {const res = await axios.get("http://127.0.0.1:8000/sample/getallchats/{id}");
 if (res.status !== 200) {
     throw new Error("Unable to send chat");
   }
@@ -21,7 +21,8 @@ const Classchat = () => {
     const [chatMessages, setChatMessages] = useState([]);
 
     useLayoutEffect(() => {
-      getUserChats()
+      const id = 'hello';
+      getUserChats(id)
         .then((data) => {
         console.log(data+"!!!!!!!!!!!!!");
           setChatMessages([...data]);
