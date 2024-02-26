@@ -82,3 +82,14 @@
   width: 60px;
   height: 60px;
 }
+
+.logoutBt {
+  background: #ffb7b7;
+  color: white;
+  font-size: 12px;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  border: none;
+  width: 70px;
+  height: 20px;
+}

@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
 import styles from "../css/Main2.module.css";
 
 const Main2_top = () => {
+  const cookie = new Cookies();
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    cookie.remove("token");
+    cookie.remove("name");
+    navigate("/");
+  };
+
   return (
     <>
-      <div>이화연 님</div>
+      <button className={styles.logoutBt} onClick={logOut}>
+        로그아웃
+      </button>
+      &nbsp;&nbsp;
+      <div>{cookie.get("name")} 님</div>
       &nbsp;&nbsp;
       <svg
         className={styles.userIc}

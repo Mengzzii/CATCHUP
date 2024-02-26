@@ -41,21 +41,30 @@ async def post_user_signup(user: User):
 
 @app.post("/user/login")
 async def post_user_login(user: User):
-#async def create_token(
-#    form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm)
-#): 
-#로그인 시 받아줄 폼을 OAuth2PasswordRequestForm를 사용, python-multipart 필요함
     #회원 존재하는지 확인
     user_exist = await get_user(user.id)
     if not user_exist:
         raise HTTPException(404, "User not found")
     #회원 존재하면 로그인
     res = await login_user(user.password, user_exist['password'])
+    name = user_exist['name']
     if not res:
         raise HTTPException(401, detail="wrong pswd")
-    #토큰 생성-유효기간은 30분으로 설정함
+    #토큰 생성-유효기간은 1일
     token = await create_token(user.id)
-    return {"success":"login successful", "token": token}
+    return {"success":"login successful", "token": token, "name": name}
+
+#사용자별로 DB에서 프론트로 데이터 전송 테스트용
+from src.controller.user_controllers import user_test 
+@app.get("/user/test")
+async def get_user_test():
+    response = await user_test(user)
+    if response:
+        return response
+    else:
+        raise HTTPException(400, "Something went wrong!")
+#사용자별로 DB에서 프론트로 데이터 전송 테스트용
+
 
 @app.post("/chat/new", response_model=User)
 async def post_new_chat(user_id: str, message: str):

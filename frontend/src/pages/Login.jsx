@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { React, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Form from "../components/Form";
 import Logo from "../components/Logo";
@@ -10,10 +10,14 @@ import { Cookies } from "react-cookie";
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const cookie = new Cookies();
+
+  const removeCookie = () => {
+    cookie.remove("token");
+    cookie.remove("name");
+  };
 
   const handleLogin = async () => {
     try {
@@ -25,15 +29,19 @@ export default function Login() {
       });
       console.log("로그인 성공:", response.data);
       cookie.set("token", response.data.token);
-      setIsSuccess(true);
+      cookie.set("name", response.data.name);
       navigate("/home");
     } catch (error) {
       console.error("로그인 실패:", error.response.data);
       setErrorMessage(
-        "아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
+        "아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
       );
     }
   };
+
+  useEffect(() => {
+    removeCookie();
+  });
 
   return (
     <div className={styles.body}>
