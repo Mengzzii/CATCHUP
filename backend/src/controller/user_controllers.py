@@ -37,12 +37,12 @@ async def create_token(id):
     token = jwt.encode(payload, "secret", algorithm="HS256")
     return token
 
-#토큰 유효성 검사_유효한 토큰인지 확인하고 사용자 반환
-async def get_current_user(request: Request):
-    return 0
-#사용자별로 DB에서 프론트로 데이터 전송 테스트용
-async def user_test():
-    return 0
+# #토큰 유효성 검사_유효한 토큰인지 확인하고 사용자 반환
+# async def get_current_user(request: Request):
+#     return 0
+# #사용자별로 DB에서 프론트로 데이터 전송 테스트용
+# async def user_test():
+#     return 0
 
 # 강의실 생성
 async def create_classroom(user_id, msg: str):
