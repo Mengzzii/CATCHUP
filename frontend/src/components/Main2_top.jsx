@@ -19,7 +19,7 @@ const Main2_top = () => {
         로그아웃
       </button>
       &nbsp;&nbsp;
-      <div>{cookie.get("name")} 님</div>
+      <div className={styles.cursor}>{cookie.get("name")} 님</div>
       &nbsp;&nbsp;
       <svg
         className={styles.userIc}

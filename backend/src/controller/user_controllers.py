@@ -30,19 +30,27 @@ async def login_user(entered_password, exist_password):
     ps_match = bcrypt.checkpw(pw_entered, pw_stored)
     return ps_match
 
-#토큰 생성-유효기간은 1일로 설정함, secret 부분은 이후 환경변수 사용
+#토큰 생성-유효기간은 1일로 설정함, secret_key와 algorithm은 이후 환경변수 사용
 async def create_token(id):
     payload = {"id":id,
-               "exp": datetime.datetime.now()+datetime.timedelta(days=1)}
-    token = jwt.encode(payload, "secret", algorithm="HS256")
+               "exp": datetime.datetime.utcnow()+datetime.timedelta(days=1)}
+    secret_key = "mina0104"
+    algorithm = "HS256"
+    token = jwt.encode(payload, secret_key, algorithm)
     return token
 
-# #토큰 유효성 검사_유효한 토큰인지 확인하고 사용자 반환
-# async def get_current_user(request: Request):
-#     return 0
-# #사용자별로 DB에서 프론트로 데이터 전송 테스트용
-# async def user_test():
-#     return 0
+#토큰 유효성 검사_토큰을 받아서 유효한지 확인하고 해당 사용자id를 반환한다
+async def get_current_user(token):
+    secret_key = "mina0104"
+    algorithm = "HS256"
+    try:
+        decoded_token = jwt.decode(token, secret_key, algorithm)
+    except:
+        raise HTTPException(401,"invalid token")
+    userId = await get_user(decoded_token.get("id"))
+    if not userId:
+        raise HTTPException(401, "userID not found")
+    return userId['id']
 
 # 강의실 생성
 async def create_classroom(user_id, msg: str):
