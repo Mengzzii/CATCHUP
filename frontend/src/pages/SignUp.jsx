@@ -61,7 +61,11 @@ export default function SignUp() {
       </div>
       <br />
       <div>
-        <Form message={"비밀번호"} setInput={setPassword} />
+        <Form
+          message={"비밀번호"}
+          setInput={setPassword}
+          inputType="password"
+        />
       </div>
       <br />
       <br />
