@@ -64,16 +64,16 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-#사용자별로 DB에서 프론트로 데이터 전송 테스트용
-from src.controller.user_controllers import user_test 
-@app.get("/user/test")
-async def get_user_test():
-    response = await user_test(user)
-    if response:
-        return response
-    else:
-        raise HTTPException(400, "Something went wrong!")
-#사용자별로 DB에서 프론트로 데이터 전송 테스트용
+# #사용자별로 DB에서 프론트로 데이터 전송 테스트용
+# from src.controller.user_controllers import user_test 
+# @app.get("/user/test")
+# async def get_user_test():
+#     response = await user_test(user)
+#     if response:
+#         return response
+#     else:
+#         raise HTTPException(400, "Something went wrong!")
+# #사용자별로 DB에서 프론트로 데이터 전송 테스트용
 
 
 @app.post("/chat/new/{user_id}/{classroom_name}/{message}", response_model=User)
@@ -89,7 +89,6 @@ async def post_create_classroom(user_id: str, msg: str):
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")
-
 
 @app.post("/user/classroom/store-concepts/{user_id}/{classroom_id}")
 async def post_store_concepts(user_id: str, classroom_id: str):
