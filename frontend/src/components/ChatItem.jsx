@@ -8,7 +8,7 @@ const ChatItem = ({content, role}) => {
         <div style={{
         display: "flex",
         px: "2",
-        backgroundColor: "#004d5612",
+        backgroundColor: "#FB6D6D",
         gap: "2",
         borderRadius: "2",
         marginTop: "1"}}

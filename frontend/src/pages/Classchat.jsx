@@ -3,17 +3,17 @@ import ChatItem from "../components/ChatItem";
 import axios from 'axios';
 
 const getUserChats = async (id) => {
-    try {const res = await axios.get("http://127.0.0.1:8000/sample/getallchats/{id}");
-if (res.status !== 200) {
-    throw new Error("Unable to send chat");
+    try {const res = await axios.get(`http://127.0.0.1:8000/sample/getallchats/${id}`);
+        if (res.status !== 200) {
+        throw new Error("Unable to send chat");
   }
+  console.log("Response:", JSON.stringify(res, null, 2));
   const data = await res.data;
   return data;} 
     catch (error) {
       console.error("실패:", error.response.data.detail[0]);
     }
   
-
 };
 
 
@@ -117,7 +117,7 @@ const Classchat = () => {
                 marginRight: "3px"
                 }}> hello?
 
-                {/*chatRooms.map()*/ }
+                {/*chatClassroom.map()*/ }
                 </div>
 
             </div>
