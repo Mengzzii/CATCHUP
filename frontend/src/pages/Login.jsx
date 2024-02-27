@@ -55,7 +55,7 @@ export default function Login() {
         </div>
         <br />
         <div>
-          <Form text="비밀번호" setInput={setPassword} />
+          <Form text="비밀번호" setInput={setPassword} inputType="password" />
         </div>
       </div>
       <br />
