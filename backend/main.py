@@ -18,7 +18,6 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
 ]
-# from src.controller.user_controllers import signup_user
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,7 +38,6 @@ async def get_sample_all_chats(id:str):
         return response
     else:
         raise HTTPException(400, "Something went wrong")
-
 
 @app.post("/user/signup", response_model=User)
 async def post_user_signup(user: User):
@@ -64,17 +62,15 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-# #사용자별로 DB에서 프론트로 데이터 전송 테스트용
-# from src.controller.user_controllers import user_test 
-# @app.get("/user/test")
-# async def get_user_test():
-#     response = await user_test(user)
-#     if response:
-#         return response
-#     else:
-#         raise HTTPException(400, "Something went wrong!")
-# #사용자별로 DB에서 프론트로 데이터 전송 테스트용
-
+#토큰->id 변환 테스트용
+from src.controller.user_controllers import get_current_user
+@app.get("/user/test_get_current_user/{token}")
+async def test_get_current_user(token):
+    response = await get_current_user(token)
+    if response:
+        return {"id": response}
+    raise HTTPException(401, "unauthorized user")
+#토큰->id 변환 테스트용
 
 @app.post("/chat/new/{user_id}/{classroom_name}/{message}", response_model=User)
 async def post_new_chat(user_id: str, message: str, classroom_name:str):

@@ -18,8 +18,7 @@ database = client.Test
 # SQL table이랑 같은 개념
 collection = database.users
 
-async def create_user(user):
-    document = user
-    result = await collection.insert_one(document)
-    return document
-
+# async def create_user(user):
+#     document = user
+#     result = await collection.insert_one(document)
+#     return document

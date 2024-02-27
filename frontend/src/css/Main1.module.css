@@ -35,9 +35,14 @@
   line-height: 2em;
   padding-top: 8em;
   padding-left: 7em;
+  cursor: default;
 }
 
 .main2contents {
   padding-top: 16em;
   padding-left: 12em;
+}
+
+.cursor {
+  cursor: default;
 }

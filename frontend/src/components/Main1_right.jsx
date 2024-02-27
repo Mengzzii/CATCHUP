@@ -8,7 +8,9 @@ const Main1_right = () => {
   return (
     <div className={styles.Main1_right}>
       <div className={styles.main2contents}>
-        <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;시작하기</h1>
+        <h1 className={styles.cursor}>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;시작하기
+        </h1>
         <br />
         <Link to="/signup">
           <Main1_r_signup />
