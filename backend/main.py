@@ -80,8 +80,8 @@ async def post_new_chat(user_id: str, message: str, classroom_name:str):
     raise HTTPException(500, "Smth went wrong ;)")
 
 @app.post("/user/classroom/new/{user_id}")
-async def post_create_classroom(user_id: str, msg: str):
-    response = await create_classroom(user_id, msg)
+async def post_create_classroom(user_id: str):
+    response = await create_classroom(user_id)
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")

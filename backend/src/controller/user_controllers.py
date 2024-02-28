@@ -53,7 +53,7 @@ async def get_current_user(token):
     return userId['id']
 
 # 강의실 생성
-async def create_classroom(user_id, msg: str):
+async def create_classroom(user_id):
     # 새로 생성한 클래스룸 ID
     new_classroom_id = str(uuid.uuid4())
     # 사용자를 데이터베이스에서 찾기
@@ -64,7 +64,7 @@ async def create_classroom(user_id, msg: str):
     if isinstance(user, dict):
         user = User(**user)
     # 새로운 클래스룸 생성
-    new_classroom = Classroom(classroomId=new_classroom_id, classroomName="First Classroom", conceptList=[], chatList=[Chat(content=msg, role="user")])
+    new_classroom = Classroom(classroomId=new_classroom_id, classroomName="First Classroom", conceptList=[], chatList=[])
     # 사용자의 클래스룸 리스트에 새로운 클래스룸 추가
     if not user.classroomList:
         user.classroomList = [new_classroom]
