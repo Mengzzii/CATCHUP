@@ -64,7 +64,7 @@ async def create_classroom(user_id):
     if isinstance(user, dict):
         user = User(**user)
     # 새로운 클래스룸 생성
-    new_classroom = Classroom(classroomId=new_classroom_id, classroomName="First Classroom", conceptList=[], chatList=[])
+    new_classroom = Classroom(classroomId=new_classroom_id, classroomName="Empty Classroom", conceptList=[], chatList=[])
     # 사용자의 클래스룸 리스트에 새로운 클래스룸 추가
     if not user.classroomList:
         user.classroomList = [new_classroom]
