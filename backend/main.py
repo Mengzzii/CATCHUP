@@ -62,15 +62,14 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-#토큰->id 변환 테스트용
+#토큰을 받아서 검사하고 id를 준다
 from src.controller.user_controllers import get_current_user
-@app.get("/user/test_get_current_user/{token}")
-async def test_get_current_user(token):
+@app.get("/user/auth_get_current_user/{token}")
+async def auth_get_current_user(token):
     response = await get_current_user(token)
     if response:
         return {"id": response}
     raise HTTPException(401, "unauthorized user")
-#토큰->id 변환 테스트용
 
 @app.post("/chat/new/{user_id}/{classroom_name}/{message}", response_model=User)
 async def post_new_chat(user_id: str, message: str, classroom_name:str):
