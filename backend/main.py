@@ -3,7 +3,7 @@ from src.models.user import User
 from fastapi import FastAPI, HTTPException, status, Depends
 from src.models.user import User
 from src.db.connection import collection
-from src.controller.chat_controller import (chat_completion, get_sample_chat)
+from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts)
 from src.controller.user_controllers import (
     signup_user, get_user, login_user, create_token, create_classroom )
 from src.controller.conceptTest_controller import store_concept
@@ -31,13 +31,23 @@ app.add_middleware(
 def index():
     return{"name":"First Data"}
 
-@app.get('/sample/getallchats/{id}')
-async def get_sample_all_chats(id:str):
-    response = await get_sample_chat(id)
+@app.get('/sample/getallchats/{id}/{classroom_id}')
+async def get_sample_all_chats(id:str,classroom_id:str):
+    response = await get_sample_chat(id, classroom_id)
     if response:
         return response
     else:
         raise HTTPException(400, "Something went wrong")
+    
+
+@app.get('/getclassconcepts/{id}/{classroom_id}')
+async def get_all_class_concepts(id:str,classroom_id:str):
+    response = await get_class_concepts(id, classroom_id)
+    if response:
+        return response
+    else:
+        raise HTTPException(400, "Something went wrong")
+
 
 @app.post("/user/signup", response_model=User)
 async def post_user_signup(user: User):
@@ -72,9 +82,9 @@ async def test_get_current_user(token):
     raise HTTPException(401, "unauthorized user")
 #토큰->id 변환 테스트용
 
-@app.post("/chat/new/{user_id}/{classroom_name}/{message}", response_model=User)
-async def post_new_chat(user_id: str, message: str, classroom_name:str):
-    response = await chat_completion(user_id, message, classroom_name)
+@app.post("/chat/new/{user_id}/{classroom_id}/{message}", response_model=list)
+async def post_new_chat(user_id: str, message: str, classroom_id:str):
+    response = await chat_completion(user_id, message, classroom_id)
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")

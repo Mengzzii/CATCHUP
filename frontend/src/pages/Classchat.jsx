@@ -3,9 +3,24 @@ import ChatItem from "../components/ChatItem";
 import axios from 'axios';
 import { IoMdSend } from "react-icons/io";
 
-const getUserChats = async (id) => {
+const getUserChats = async (id, classroom_id) => {
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/sample/getallchats/${id}`);
+      const res = await axios.get(`http://127.0.0.1:8000/sample/getallchats/${id}/${classroom_id}`);
+        if (res.status !== 200) {
+        throw new Error("Unable to send chat");
+  }
+  console.log("Response:", JSON.stringify(res, null, 2));
+  const data = await res.data;
+  return data;} 
+    catch (error) {
+      console.error("실패:", error.response.data.detail[0]);
+    }
+  
+};
+
+const getClassConcepts = async (id, classroom_id) => {
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/getclassconcepts/${id}/${classroom_id}`);
         if (res.status !== 200) {
         throw new Error("Unable to send chat");
   }
@@ -36,33 +51,45 @@ const sendChatRequest = async (user_id, classroom_id, message) => {
 const Classchat = () => {
     const inputRef = useRef(null);
     const [chatMessages, setChatMessages] = useState([]);
+    const [classConcepts, setClassConcepts] = useState([]);
     const handleSubmit = async () => {
       const content = inputRef.current?.value;
       if (inputRef && inputRef.current) {
       inputRef.current.value = "";
       }
       const newMessage = { role: "user", content };
-      console.log("newMessage :", JSON.stringify(newMessage, null, 2));
       setChatMessages((prev) => [...prev, newMessage]);
-      console.log("chatMessages :", JSON.stringify(chatMessages, null, 2));
       const user_id = 'hello';
       const classroom_id = '2df997c3-5ec6-4482-9de6-430c2eb22c96';
       const chatData = await sendChatRequest(user_id, classroom_id, content);
-      console.log("######chatData:", JSON.stringify(chatData, null, 2));
+      // console.log("######chatData:", JSON.stringify(chatData, null, 2));
       setChatMessages([...chatData]);
   };
 
     useLayoutEffect(() => {
       const id = 'hello';
-      getUserChats(id)
+      const classroom_id = '2df997c3-5ec6-4482-9de6-430c2eb22c96';
+      getUserChats(id, classroom_id)
         .then((data) => {
-        console.log("data : ", JSON.stringify(data));
           setChatMessages([...data]);
           console.log("Successfully loaded chats");
         })
         .catch((err) => {
           console.log(err);
         });
+
+      getClassConcepts(id, classroom_id)
+        .then((data) => {
+          setClassConcepts([...data]);
+          console.log("Successfully loaded concepts");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+
+
+
   }, []);
 
 
@@ -153,7 +180,10 @@ const Classchat = () => {
                 marginRight: "3px"
                 }}> hello?
 
-                {/*chatClassroom.map()*/ }
+                {/* {classConcepts.map((concept, index)=>
+                (<ConceptItem concept = {concept} key={index}></ConceptItem>))
+                  
+                } */}
                 </div>
 
             </div>
