@@ -6,7 +6,7 @@ from ..config.openai_config import openai_config
 from ..models.user import Classroom
 
 
-async def chat_completion(user_id: str, msg, classroom_name):
+async def chat_completion(user_id: str, msg, classroom_id):
     # Retrieve the user from the database
     user = await collection.find_one({"id": user_id})
     if user is None:
@@ -15,12 +15,12 @@ async def chat_completion(user_id: str, msg, classroom_name):
     # Find the classroom by name
     target_classroom = None
     for classroom in user["classroomList"]:
-        if classroom["classroomName"] == classroom_name:
+        if classroom["classroomId"] == classroom_id:
             target_classroom = classroom
             break
 
     if target_classroom is None:
-        raise HTTPException(status_code=404, detail=f"Classroom '{classroom_name}' not found")
+        raise HTTPException(status_code=404, detail=f"Classroom '{classroom_id}' not found")
 
     # Access the chatList from the target classroom
     chat_list = target_classroom["chatList"]
@@ -44,7 +44,7 @@ async def chat_completion(user_id: str, msg, classroom_name):
     target_classroom["chatList"].append(new_res)
 
     # Update the user's classroomList with the modified list
-    updated_classroom_list = [c for c in user["classroomList"] if c['classroomName'] != classroom_name]  # Remove existing classroom
+    updated_classroom_list = [c for c in user["classroomList"] if c['classroomId'] != classroom_id]  # Remove existing classroom
     updated_classroom_list.append(target_classroom)
 
     user["classroomList"] = updated_classroom_list
@@ -52,14 +52,47 @@ async def chat_completion(user_id: str, msg, classroom_name):
     result = await collection.update_one(
         {"id": user_id}, {"$set": user}
     )
-    return user
+    return target_classroom["chatList"]
 
-async def get_sample_chat(id:str):
+async def get_sample_chat(id:str, classroom_id:str):
     user = await collection.find_one({"id":id})
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    chats_to_send = [{"role": chat["role"], "content": chat["content"]} for chat in user["classroomList"][0]["chatList"]]
+    
+    target_classroom = None
+    
+    #find classroom
+    for classroom in user["classroomList"]:
+        if classroom["classroomId"]==classroom_id:
+            target_classroom = classroom
+            break
+    
+    if target_classroom == None:
+        raise HTTPException(status_code=404, detail=f"Classroom ID '{classroom_id}' not found")
+    
+    chats_to_send = [{"role": chat["role"], "content": chat["content"]} for chat in target_classroom["chatList"]]
     return chats_to_send
+
+async def get_class_concepts(id:str, classroom_id:str):
+    user = await collection.find_one({"id":id})
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    #find classroom
+    for classroom in user["classroomList"]:
+        if classroom["classroomId"]==classroom_id:
+            target_classroom = classroom
+            break
+    
+    if target_classroom == None:
+        raise HTTPException(status_code=404, detail=f"Classroom ID '{classroom_id}' not found")
+    
+    concept_name_list = []
+    for concept in target_classroom["conceptList"]:
+        concept_name_list.append(concept["name"])
+    
+    return concept_name_list
+    
 
 
 
