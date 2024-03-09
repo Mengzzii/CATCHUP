@@ -30,7 +30,8 @@ async def login_user(entered_password, exist_password):
     ps_match = bcrypt.checkpw(pw_entered, pw_stored)
     return ps_match
 
-#토큰 생성-유효기간은 1일로 설정함, secret_key와 algorithm은 이후 환경변수 사용 권장
+#SECRET_KEY, ALGORITHM, TOKEN_EXPIRETIME 등으로 이후 환경변수 사용 권장
+#토큰 생성-유효기간은 1일로 설정함
 async def create_token(id):
     payload = {"id":id,
                "exp": datetime.datetime.utcnow()+datetime.timedelta(days=1)}
