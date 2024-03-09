@@ -1,6 +1,6 @@
 from typing import Dict, List
 from src.models.user import User
-from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi import FastAPI, HTTPException, status, Depends, Header
 from src.models.user import User
 from src.db.connection import collection
 from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts)
@@ -80,6 +80,21 @@ async def auth_get_current_user(token):
     if response:
         return {"id": response}
     raise HTTPException(401, "unauthorized user")
+
+#토큰 이용한 연결테스트
+#토큰을 받아서 검사하고 id를 준다
+async def auth_get_current_user(tokens: str = Header(...)):
+    response = await get_current_user(tokens)
+    if response:
+        return {"id": response}
+    raise HTTPException(401, "unauthorized user")
+@app.post("/user/test/classroom/new")
+async def test_post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
+    response = await create_classroom(user_id["id"])
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+#토큰 이용한 연결테스트
 
 @app.post("/chat/new/{user_id}/{classroom_id}/{message}", response_model=list)
 async def post_new_chat(user_id: str, message: str, classroom_id:str):

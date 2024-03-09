@@ -22,17 +22,6 @@ const Main2_class = () => {
     const response = await axios.post(
       `http://127.0.0.1:8000/user/classroom/new/${userId}`
     );
-
-    // try {
-    //   const response = await axios.post(
-    //     `http://127.0.0.1:8000/user/classroom/new/${userId}`
-    //   );
-    //   if (response) {
-    //     console.log("챗방 생성 성공: ", JSON.stringify(response, null, 2));
-    //   }
-    // } catch (error) {
-    //   console.error("챗방 생성 실패: ", error.response.data);
-    // }
   };
 
   return (

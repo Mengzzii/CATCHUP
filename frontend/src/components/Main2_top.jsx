@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import styles from "../css/Main2.module.css";
+import axios from "axios";
 
 const Main2_top = () => {
   const cookie = new Cookies();
@@ -13,13 +14,32 @@ const Main2_top = () => {
     navigate("/");
   };
 
+  const newTest = async () => {
+    const token = cookie.get("token");
+    const headers = {
+      tokens: token,
+    };
+    console.log(headers);
+
+    await axios
+      .post("http://127.0.0.1:8000/user/test/classroom/new", null, { headers })
+      .then((response) => {
+        console.log("생성 성공:", response.data);
+      })
+      .catch((error) => {
+        console.error("생성 실패:", error.response.data);
+      });
+  };
+
   return (
     <>
       <button className={styles.logoutBt} onClick={logOut}>
         로그아웃
       </button>
       &nbsp;&nbsp;
-      <div className={styles.cursor}>{cookie.get("name")} 님</div>
+      <div className={styles.cursor} onClick={newTest}>
+        {cookie.get("name")} 님
+      </div>
       &nbsp;&nbsp;
       <svg
         className={styles.userIc}
