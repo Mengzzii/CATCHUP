@@ -83,13 +83,13 @@ async def auth_get_current_user(token):
 
 #토큰 이용한 연결테스트
 #토큰을 받아서 검사하고 id를 준다
-async def auth_get_current_user(tokens: str = Header(...)):
-    response = await get_current_user(tokens)
+async def test_auth_get_current_user(token: str = Header(...)):
+    response = await get_current_user(token)
     if response:
         return {"id": response}
     raise HTTPException(401, "unauthorized user")
 @app.post("/user/test/classroom/new")
-async def test_post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
+async def test_post_create_classroom(user_id: dict = Depends(test_auth_get_current_user)):
     response = await create_classroom(user_id["id"])
     if response:
         return response

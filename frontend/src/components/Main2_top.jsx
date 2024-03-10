@@ -17,9 +17,8 @@ const Main2_top = () => {
   const newTest = async () => {
     const token = cookie.get("token");
     const headers = {
-      tokens: token,
+      token: token,
     };
-    console.log(headers);
 
     await axios
       .post("http://127.0.0.1:8000/user/test/classroom/new", null, { headers })
