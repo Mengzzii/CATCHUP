@@ -18,15 +18,11 @@ const Main2_class = () => {
     await axios
       .get("http://127.0.0.1:8000/user/dashboard", { headers })
       .then((response) => {
-        console.log("생성 성공:", response.data);
-        // for (var key in response.data) {
-        //   console.log(key);
-        //   console.log(response.data[key]);
-        // }
+        console.log("dashboard 성공:", response.data);
         setClassList(response.data);
       })
       .catch((error) => {
-        console.error("생성 실패:", error.response.data);
+        console.error("dashboard 실패:", error.response.data);
       });
   };
 
