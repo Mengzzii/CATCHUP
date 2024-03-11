@@ -5,7 +5,7 @@ from src.models.user import User
 from src.db.connection import collection
 from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts)
 from src.controller.user_controllers import (
-    signup_user, get_user, login_user, create_token, create_classroom )
+    signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
 from src.controller.concept_controller import (chat_check_store, store_concept)
 # from fastapi.security import OAuth2PasswordRequestForm
 
@@ -71,17 +71,7 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-#토큰을 받아서 검사하고 id를 준다
-from src.controller.user_controllers import get_current_user
-@app.get("/user/auth_get_current_user/{token}")
-async def auth_get_current_user(token):
-    response = await get_current_user(token)
-    if response:
-        return {"id": response}
-    raise HTTPException(401, "unauthorized user")
-
 #토큰 이용한 연결테스트
-#토큰을 받아서 검사하고 id를 준다
 async def auth_get_current_user(token: str = Header(...)):
     response = await get_current_user(token)
     if response:
@@ -108,7 +98,6 @@ async def get_all_classes(user_id: str):
         className = classroom["classroomName"]
         class_name_id_List[classId] = className
     return class_name_id_List
-    
 @app.get("/user/dashboard")
 async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
     response = await get_all_classes(user_id["id"])
