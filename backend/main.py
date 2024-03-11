@@ -6,7 +6,7 @@ from src.db.connection import collection
 from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts)
 from src.controller.user_controllers import (
     signup_user, get_user, login_user, create_token, create_classroom )
-from src.controller.concept_controller import (chat_check_store, store_concept)
+from src.controller.concept_controller import (chat_check_store, store_concept, chat_completion2)
 # from fastapi.security import OAuth2PasswordRequestForm
 
 # an HTTP-specific exception class  to generate exception information
@@ -141,6 +141,13 @@ async def post_store_concepts(user_id: str, classroom_id: str):
 @app.post("/user/chat/check/store/{user_id}/{classroom_id}")
 async def post_chat_check_store(user_id:str, classroom_id:str, msg):
     response = await chat_check_store(user_id, classroom_id, msg)
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+
+@app.post("/user/chat/check/store/combine/{user_id}/{classroom_id}")
+async def post_chat_check_store2(user_id:str, classroom_id:str, msg):
+    response = await chat_completion2(user_id, classroom_id, msg)
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")
