@@ -48,7 +48,6 @@ async def get_all_class_concepts(id:str,classroom_id:str):
     else:
         raise HTTPException(400, "Something went wrong")
 
-
 @app.post("/user/signup", response_model=User)
 async def post_user_signup(user: User):
     response = await signup_user(user)
@@ -83,18 +82,40 @@ async def auth_get_current_user(token):
 
 #토큰 이용한 연결테스트
 #토큰을 받아서 검사하고 id를 준다
-async def test_auth_get_current_user(token: str = Header(...)):
+async def auth_get_current_user(token: str = Header(...)):
     response = await get_current_user(token)
     if response:
         return {"id": response}
     raise HTTPException(401, "unauthorized user")
 @app.post("/user/test/classroom/new")
-async def test_post_create_classroom(user_id: dict = Depends(test_auth_get_current_user)):
+async def test_post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
     response = await create_classroom(user_id["id"])
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")
 #토큰 이용한 연결테스트
+
+#Dashboard
+#User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
+async def get_all_classes(user_id: str):
+    user = await collection.find_one({"id":user_id})
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    class_name_id_List={}
+    for classroom in user["classroomList"]:
+        classId = classroom["classroomId"]
+        className = classroom["classroomName"]
+        class_name_id_List[classId] = className
+    return class_name_id_List
+    
+@app.get("/user/dashboard")
+async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
+    response = await get_all_classes(user_id["id"])
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+#Dashboard
 
 @app.post("/chat/new/{user_id}/{classroom_id}/{message}", response_model=list)
 async def post_new_chat(user_id: str, message: str, classroom_id:str):
