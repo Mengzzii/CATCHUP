@@ -1,12 +1,13 @@
 from typing import Dict, List
 from src.models.user import User
-from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi import FastAPI, HTTPException, status, Depends, Header
 from src.models.user import User
 from src.db.connection import collection
+
 from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
-from src.controller.user_controllers import (
-    signup_user, get_user, login_user, create_token, create_classroom )
-from src.controller.conceptTest_controller import store_concept
+from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
+from src.controller.concept_controller import (chat_check_store, store_concept, chat_completion2)
+
 # from fastapi.security import OAuth2PasswordRequestForm
 
 # an HTTP-specific exception class  to generate exception information
@@ -66,7 +67,6 @@ async def get_all_class_concepts(id:str,classroom_id:str):
     else:
         raise HTTPException(400, "Something went wrong")
 
-
 @app.post("/user/signup", response_model=User)
 async def post_user_signup(user: User):
     response = await signup_user(user)
@@ -90,15 +90,40 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-#토큰->id 변환 테스트용
-from src.controller.user_controllers import get_current_user
-@app.get("/user/test_get_current_user/{token}")
-async def test_get_current_user(token):
+#토큰 이용한 연결테스트
+async def auth_get_current_user(token: str = Header(...)):
     response = await get_current_user(token)
     if response:
         return {"id": response}
     raise HTTPException(401, "unauthorized user")
-#토큰->id 변환 테스트용
+@app.post("/user/test/classroom/new")
+async def test_post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
+    response = await create_classroom(user_id["id"])
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+#토큰 이용한 연결테스트
+
+#Dashboard
+#User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
+async def get_all_classes(user_id: str):
+    user = await collection.find_one({"id":user_id})
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    class_name_id_List={}
+    for classroom in user["classroomList"]:
+        classId = classroom["classroomId"]
+        className = classroom["classroomName"]
+        class_name_id_List[classId] = className
+    return class_name_id_List
+@app.get("/user/dashboard")
+async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
+    response = await get_all_classes(user_id["id"])
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+#Dashboard
 
 @app.post("/chat/new/{user_id}/{classroom_id}/{message}", response_model=list)
 async def post_new_chat(user_id: str, message: str, classroom_id:str):
@@ -116,7 +141,21 @@ async def post_create_classroom(user_id: str):
 
 @app.post("/user/classroom/store-concepts/{user_id}/{classroom_id}")
 async def post_store_concepts(user_id: str, classroom_id: str):
-    response= await store_concept(user_id, classroom_id)
+    response = await store_concept(user_id, classroom_id)
     if response:
         return {"message": "Concepts stored successfully"}
+    raise HTTPException(400, "Something went wrong!")
+
+@app.post("/user/chat/check/store/{user_id}/{classroom_id}")
+async def post_chat_check_store(user_id:str, classroom_id:str, msg):
+    response = await chat_check_store(user_id, classroom_id, msg)
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+
+@app.post("/user/chat/check/store/combine/{user_id}/{classroom_id}")
+async def post_chat_check_store2(user_id:str, classroom_id:str, msg):
+    response = await chat_completion2(user_id, classroom_id, msg)
+    if response:
+        return response
     raise HTTPException(400, "Something went wrong!")

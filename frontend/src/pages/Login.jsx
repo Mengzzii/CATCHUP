@@ -15,8 +15,11 @@ export default function Login() {
   const cookie = new Cookies();
 
   const removeCookie = () => {
-    cookie.remove("token");
-    cookie.remove("name");
+    if (cookie.get("token") && cookie.get("name")) {
+      cookie.remove("token");
+      cookie.remove("name");
+      console.log("token과 name 쿠키 삭제");
+    }
   };
 
   const handleLogin = async () => {

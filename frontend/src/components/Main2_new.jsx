@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../css/Main2.module.css";
 import { Link } from "react-router-dom";
 
