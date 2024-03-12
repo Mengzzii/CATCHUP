@@ -3,7 +3,8 @@ from src.models.user import User
 from fastapi import FastAPI, HTTPException, status, Depends, Header
 from src.models.user import User
 from src.db.connection import collection
-from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts)
+
+from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
 from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
 from src.controller.concept_controller import (chat_check_store, store_concept, chat_completion2)
 
@@ -31,6 +32,14 @@ app.add_middleware(
 def index():
     return{"name":"First Data"}
 
+@app.get('/json/getconceptlist')
+async def get_json_concept_list():
+    response = await get_concept_list()
+    if response:
+        return response
+    else:
+        raise HTTPException(400, "Something went wrong")
+
 @app.get('/sample/getallchats/{id}/{classroom_id}')
 async def get_sample_all_chats(id:str,classroom_id:str):
     response = await get_sample_chat(id, classroom_id)
@@ -39,6 +48,16 @@ async def get_sample_all_chats(id:str,classroom_id:str):
     else:
         raise HTTPException(400, "Something went wrong")
     
+
+    
+@app.get('/getconceptchats/{id}/{classroom_id}/{concept_id}')
+async def get_all_concept_chats(id:str,classroom_id:str, concept_id:str):
+    response = await get_concept_chat(id, classroom_id, concept_id)
+    if response:
+        return response
+    else:
+        raise HTTPException(400, "Something went wrong")
+
 
 @app.get('/getclassconcepts/{id}/{classroom_id}')
 async def get_all_class_concepts(id:str,classroom_id:str):
