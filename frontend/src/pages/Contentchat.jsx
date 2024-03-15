@@ -4,9 +4,6 @@ import axios from "axios";
 import { Cookies } from "react-cookie";
 
 const Contentchat = () => {
-  {
-    getUserId();
-  }
   return (
     <>
       <div>개념챗방</div>
