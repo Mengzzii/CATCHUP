@@ -4,6 +4,7 @@ from bson.objectid import ObjectId
 import uuid
 from ..config.openai_config import openai_config
 from ..models.user import Classroom
+import json
 
 
 async def chat_completion(user_id: str, msg, classroom_id):
@@ -142,7 +143,10 @@ async def get_concept_list():
   presence_penalty=0
 )
     print('!!!!!!!!!!!!!!!!!!')
-    print(json_response.choices[0].message.content)
+    json_res_str = json_response.choices[0].message.content
+    print(json_res_str)
+
+    
     return json_response.choices[0].message.content
 
 
