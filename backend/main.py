@@ -7,6 +7,7 @@ from src.db.connection import collection
 from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
 from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
 from src.controller.concept_controller import (chat_check_store, store_concept, chat_completion2)
+from src.controller.auth_controllers import (auth_get_current_user)
 
 # from fastapi.security import OAuth2PasswordRequestForm
 
@@ -40,28 +41,32 @@ async def get_json_concept_list():
     else:
         raise HTTPException(400, "Something went wrong")
 
-@app.get('/sample/getallchats/{id}/{classroom_id}')
-async def get_sample_all_chats(id:str,classroom_id:str):
-    response = await get_sample_chat(id, classroom_id)
+@app.get('/user/getallchats')
+async def get_all_chats(classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await get_sample_chat(user_id["id"], classroom_id)
     if response:
         return response
     else:
         raise HTTPException(400, "Something went wrong")
     
-
+@app.get('/chat/getclassconcepts')
+async def get_all_class_concepts(classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await get_class_concepts(user_id["id"], classroom_id)
+    if response:
+        return response
+    else:
+        raise HTTPException(400, "Something went wrong")
+    
+@app.post("/chat/new", response_model=list)
+async def post_new_chat(message: str, classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await chat_completion(user_id["id"], message, classroom_id)
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
     
 @app.get('/getconceptchats/{id}/{classroom_id}/{concept_id}')
-async def get_all_concept_chats(id:str,classroom_id:str, concept_id:str):
-    response = await get_concept_chat(id, classroom_id, concept_id)
-    if response:
-        return response
-    else:
-        raise HTTPException(400, "Something went wrong")
-
-
-@app.get('/getclassconcepts/{id}/{classroom_id}')
-async def get_all_class_concepts(id:str,classroom_id:str):
-    response = await get_class_concepts(id, classroom_id)
+async def get_all_concept_chats(user_id:str,classroom_id:str, concept_id:str):
+    response = await get_concept_chat(user_id, classroom_id, concept_id)
     if response:
         return response
     else:
@@ -90,20 +95,6 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-#토큰 이용한 연결테스트
-async def auth_get_current_user(token: str = Header(...)):
-    response = await get_current_user(token)
-    if response:
-        return {"id": response}
-    raise HTTPException(401, "unauthorized user")
-@app.post("/user/test/classroom/new")
-async def test_post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
-    response = await create_classroom(user_id["id"])
-    if response:
-        return response
-    raise HTTPException(400, "Something went wrong!")
-#토큰 이용한 연결테스트
-
 #Dashboard
 #User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
 async def get_all_classes(user_id: str):
@@ -125,16 +116,9 @@ async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
     raise HTTPException(400, "Something went wrong!")
 #Dashboard
 
-@app.post("/chat/new/{user_id}/{classroom_id}/{message}", response_model=list)
-async def post_new_chat(user_id: str, message: str, classroom_id:str):
-    response = await chat_completion(user_id, message, classroom_id)
-    if response:
-        return response
-    raise HTTPException(500, "Smth went wrong ;)")
-
-@app.post("/user/classroom/new/{user_id}")
-async def post_create_classroom(user_id: str):
-    response = await create_classroom(user_id)
+@app.post("/user/classroom/new")
+async def post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
+    response = await create_classroom(user_id["id"])
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")
