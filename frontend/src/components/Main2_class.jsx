@@ -33,7 +33,7 @@ const Main2_class = () => {
   return (
     <div className={styles.classes}>
       {Object.entries(classList).map(([id, name]) => (
-        <Link to={`/chat/${id}`} key={id}>
+        <Link to={`/class/${id}`} key={id}>
           <div className={styles.classchat}>{name}</div>
         </Link>
       ))}

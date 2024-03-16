@@ -25,7 +25,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_methods=["GET", "POST", "PUT", "DELETE","OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -57,9 +57,9 @@ async def get_all_class_concepts(classroom_id:str, user_id:dict = Depends(auth_g
     else:
         raise HTTPException(400, "Something went wrong")
     
-@app.post("/chat/new", response_model=list)
-async def post_new_chat(message: str, classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
-    response = await chat_completion(user_id["id"], message, classroom_id)
+@app.post("/chat/new/{classroom_id}/{message}", response_model=list)
+async def post_new_chat(classroom_id:str, message: str, user_id:dict = Depends(auth_get_current_user)):
+    response = await chat_completion2(user_id["id"], message, classroom_id)
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")

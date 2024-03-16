@@ -7,11 +7,11 @@ import { useParams } from "react-router-dom";
 
 const getUserChats = async (classid, headers) => {
   try {
-    const res = await axios.get(`http://127.0.0.1:8000/user/getallchats`, {
+    const res = await axios.get("http://127.0.0.1:8000/user/getallchats", {
       params: { classroom_id: classid },
       headers: headers,
     });
-    consol.log(res.data);
+    console.log(res.data);
     if (res.status !== 200) {
       throw new Error("Unable to send chat");
     }
@@ -24,7 +24,6 @@ const getUserChats = async (classid, headers) => {
 
 const getClassConcepts = async (classid, headers) => {
   try {
-    console.log(headers);
     const res = await axios.get(`http://127.0.0.1:8000/chat/getclassconcepts`, {
       params: { classroom_id: classid },
       headers: headers,
@@ -40,11 +39,14 @@ const getClassConcepts = async (classid, headers) => {
   }
 };
 
-const sendChatRequest = async (classid, message, headers) => {
+const sendChatRequest = async (classid, msg, headers) => {
   try {
+    console.log(classid);
+    console.log(msg);
+    console.log(headers);
     const res = await axios.post(
-      `http://127.0.0.1:8000/chat/new`,
-      { classroom_id: classid, message: message },
+      `http://127.0.0.1:8000/chat/new/${classid}/${msg}`,
+      null,
       { headers: headers }
     );
     console.log("Response:", JSON.stringify(res, null, 2));
@@ -55,7 +57,7 @@ const sendChatRequest = async (classid, message, headers) => {
   }
 };
 
-const Classchat = () => {
+const Newclassroomchat = () => {
   const cookie = new Cookies();
   const token = cookie.get("token");
   const headers = {
@@ -213,4 +215,4 @@ const Classchat = () => {
   );
 };
 
-export default Classchat;
+export default Newclassroomchat;
