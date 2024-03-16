@@ -5,31 +5,26 @@ import { IoMdSend } from "react-icons/io";
 import { Cookies } from "react-cookie";
 import { useParams } from "react-router-dom";
 
-const cookie = new Cookies();
-const token = cookie.get("token");
-const headers = {
-  token: token,
-};
-
-const getUserChats = async (classid) => {
+const getUserChats = async (classid, headers) => {
   try {
     const res = await axios.get(`http://127.0.0.1:8000/user/getallchats`, {
       params: { classroom_id: classid },
       headers: headers,
     });
+    consol.log(res.data);
     if (res.status !== 200) {
       throw new Error("Unable to send chat");
     }
-    console.log("Response:", JSON.stringify(res, null, 2));
-    const data = await res.data;
-    return data;
+    console.log("Response:", JSON.stringify(res.data, null, 2));
+    return res.data;
   } catch (error) {
     console.error("실패:", error.response.data.detail[0]);
   }
 };
 
-const getClassConcepts = async (classid) => {
+const getClassConcepts = async (classid, headers) => {
   try {
+    console.log(headers);
     const res = await axios.get(`http://127.0.0.1:8000/chat/getclassconcepts`, {
       params: { classroom_id: classid },
       headers: headers,
@@ -45,7 +40,7 @@ const getClassConcepts = async (classid) => {
   }
 };
 
-const sendChatRequest = async (classid, message) => {
+const sendChatRequest = async (classid, message, headers) => {
   try {
     const res = await axios.post(
       `http://127.0.0.1:8000/chat/new`,
@@ -61,6 +56,11 @@ const sendChatRequest = async (classid, message) => {
 };
 
 const Classchat = () => {
+  const cookie = new Cookies();
+  const token = cookie.get("token");
+  const headers = {
+    token: token,
+  };
   const { classid } = useParams();
   const inputRef = useRef(null);
   const [chatMessages, setChatMessages] = useState([]);
@@ -72,13 +72,13 @@ const Classchat = () => {
     }
     const newMessage = { role: "user", content };
     setChatMessages((prev) => [...prev, newMessage]);
-    const chatData = await sendChatRequest(classid, content);
+    const chatData = await sendChatRequest(classid, content, headers);
     // console.log("######chatData:", JSON.stringify(chatData, null, 2));
     setChatMessages([...chatData]);
   };
 
   useLayoutEffect(() => {
-    getUserChats(classid)
+    getUserChats(classid, headers)
       .then((data) => {
         setChatMessages([...data]);
         console.log("Successfully loaded chats");
@@ -87,7 +87,7 @@ const Classchat = () => {
         console.log(err);
       });
 
-    getClassConcepts(classid)
+    getClassConcepts(classid, headers)
       .then((data) => {
         setClassConcepts([...data]);
         console.log("Successfully loaded concepts");
