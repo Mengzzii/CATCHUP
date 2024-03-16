@@ -19,7 +19,7 @@ const Main2_new = () => {
       .then((response) => {
         console.log("생성 성공:", response.data);
         const classid = response.data;
-        navigate(`/classchat/${classid}`);
+        navigate(`/new/class/${classid}`);
       })
       .catch((error) => {
         console.error("생성 실패:", error.response.data);

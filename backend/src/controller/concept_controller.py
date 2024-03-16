@@ -78,7 +78,7 @@ async def chat_check_store(user_id, classroom_id, msg):
 
     return {"message": "It is JSON" if 'parsed_msg' in locals() else "It is message"} 
 
-async def chat_completion2(user_id: str, classroom_id: str, msg):
+async def chat_completion2(user_id: str, msg, classroom_id: str):
     user = await collection.find_one({"id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -129,5 +129,6 @@ async def chat_completion2(user_id: str, classroom_id: str, msg):
         {"id": user_id},
         {"$set": {"classroomList": user["classroomList"]}}
     )
+    return target_classroom["chatList"]
 
-    return {"message": "It is JSON" if 'parsed_msg' in locals() else "It is message"} 
+    # return {"message": "It is JSON" if 'parsed_msg' in locals() else "It is message"} 
