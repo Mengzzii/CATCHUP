@@ -55,22 +55,25 @@ async def chat_completion(user_id: str, msg, classroom_id):
     return target_classroom["chatList"]
 
 async def get_sample_chat(id:str, classroom_id:str):
+    print(id)
+    print(classroom_id)
     user = await collection.find_one({"id":id})
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    
     target_classroom = None
     
     #find classroom
     for classroom in user["classroomList"]:
         if classroom["classroomId"]==classroom_id:
             target_classroom = classroom
+            print(target_classroom)
             break
     
     if target_classroom == None:
         raise HTTPException(status_code=404, detail=f"Classroom ID '{classroom_id}' not found")
     
     chats_to_send = [{"role": chat["role"], "content": chat["content"]} for chat in target_classroom["chatList"]]
+    print(chats_to_send)
     return chats_to_send
 
 async def get_concept_chat(id:str, classroom_id:str, concept_id:str):
