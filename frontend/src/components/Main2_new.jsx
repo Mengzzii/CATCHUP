@@ -1,12 +1,35 @@
 import React, { useState, useEffect } from "react";
 import styles from "../css/Main2.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
+import axios from "axios";
 
 const Main2_new = () => {
+  const navigate = useNavigate();
+  const cookie = new Cookies();
+
+  const handleNewClassroom = async () => {
+    const token = cookie.get("token");
+    const headers = {
+      token: token,
+    };
+
+    await axios
+      .post("http://127.0.0.1:8000/user/classroom/new", null, { headers })
+      .then((response) => {
+        console.log("생성 성공:", response.data);
+        const classid = response.data;
+        navigate(`/classchat/${classid}`);
+      })
+      .catch((error) => {
+        console.error("생성 실패:", error.response.data);
+      });
+  };
+
   return (
-    <Link to="/classchat">
-      <button className={styles.newbtn}>+</button>
-    </Link>
+    <button className={styles.newbtn} onClick={handleNewClassroom}>
+      +
+    </button>
   );
 };
 

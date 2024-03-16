@@ -13,7 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/classchat" element={<Classchat />} />
+        <Route path="/classchat/:classid" element={<Classchat />} />
         <Route path="/contentchat" element={<Contentchat />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
