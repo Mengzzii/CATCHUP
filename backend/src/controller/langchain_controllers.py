@@ -42,7 +42,7 @@ print(result)
 loader = TextLoader("C:/Users/cse/Desktop/catchup19/CATCHUP/transcription.txt")
 text_documents = loader.load()
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=10, chunk_overlap=2)
 res = text_splitter.split_documents(text_documents)
 
 embeddings = OpenAIEmbeddings()
