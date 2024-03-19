@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ChatItem from "../components/ChatItem";
+import ConceptItem from "../components/ConceptItem";
 import axios from "axios";
 import { IoMdSend } from "react-icons/io";
 import { Cookies } from "react-cookie";
@@ -39,6 +40,25 @@ const getClassConcepts = async (classid, headers) => {
   }
 };
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!개념별 chat 가져오는 함수
+const getConceptChats = async (classid, headers, concept_id) => {
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/getconceptchats`, {
+      params: { classroom_id: classid, concept_id: concept_id },
+      headers: headers
+    });
+        if (res.status !== 200) {
+        throw new Error("Unable to send chat");
+  }
+  console.log("get Concept Chats / Response:", JSON.stringify(res, null, 2));
+  const data = await res.data;
+  return data;} 
+    catch (error) {
+      console.error("실패:", error.response.data.detail[0]);
+    }
+  
+};
+
 const sendChatRequest = async (classid, msg, headers) => {
   try {
     console.log(classid);
@@ -49,7 +69,6 @@ const sendChatRequest = async (classid, msg, headers) => {
       null,
       { headers: headers }
     );
-    console.log("Response:", JSON.stringify(res, null, 2));
     const data = await res.data;
     return data;
   } catch (error) {
@@ -75,9 +94,29 @@ const Classroomchat = () => {
     const newMessage = { role: "user", content };
     setChatMessages((prev) => [...prev, newMessage]);
     const chatData = await sendChatRequest(classid, content, headers);
-    // console.log("######chatData:", JSON.stringify(chatData, null, 2));
     setChatMessages([...chatData]);
   };
+
+  //!!!!!!!!!!!!!!!!!!!!!!!!!
+  const handleConceptClick= async (concept_id)=>{
+      getConceptChats(classid, headers, concept_id)
+        .then((data) => {
+          console.log("Successfully loaded CONCEPT chats DIctionary");
+          console.log("######chatData:", JSON.stringify(data, null, 2));
+          if (data && Array.isArray(data) && data.length > 0) {
+          setChatMessages([...data]);
+          console.log("######chatData:", JSON.stringify(data, null, 2));
+         } else {
+        // Clear chat messages if data is empty
+        setChatMessages([]);
+        console.log("No chat data available or data is empty.");
+    }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
 
   useLayoutEffect(() => {
     getUserChats(classid, headers)
@@ -205,10 +244,10 @@ const Classroomchat = () => {
         >
           {" "}
           hello?
-          {/* {classConcepts.map((concept, index)=>
-                (<ConceptItem concept = {concept} key={index}></ConceptItem>))
+          {classConcepts.map((concept, index)=>
+                (<ConceptItem onClick={handleConceptClick} concept = {concept} key={index}></ConceptItem>))
                   
-                } */}
+                }
         </div>
       </div>
     </div>
