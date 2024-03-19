@@ -3,6 +3,10 @@ import os
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
+from langchain_community.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai.embeddings import OpenAIEmbeddings
+
 
 load_dotenv()
 
@@ -29,13 +33,20 @@ result = chain.invoke({
 
 print(result)
 
-with open("transcription.txt") as file:
-    transcription = file.read()
+# with open("C:/Users/cse/Desktop/catchup19/CATCHUP/transcription.txt") as file:
+#     transcription = file.read()
+# res = transcription[:100]
+# print(res)
 
-transcription[:100]
 #loading the transcription in memory
-from langchain_community.document_loaders import TextLoader
-
-loader = TextLoader("transcription.txt")
+loader = TextLoader("C:/Users/cse/Desktop/catchup19/CATCHUP/transcription.txt")
 text_documents = loader.load()
-text_documents
+
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
+res = text_splitter.split_documents(text_documents)
+
+embeddings = OpenAIEmbeddings()
+embedded_query = embeddings.embed_query("Who is Mary's sister?")
+
+print(f"Embedding length: {len(embedded_query)}")
+print(embedded_query[:10])
