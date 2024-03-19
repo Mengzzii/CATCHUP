@@ -3,10 +3,10 @@ import os
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
+
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai.embeddings import OpenAIEmbeddings
-
 
 load_dotenv()
 
@@ -32,6 +32,7 @@ result = chain.invoke({
 })
 
 print(result)
+
 
 # with open("C:/Users/cse/Desktop/catchup19/CATCHUP/transcription.txt") as file:
 #     transcription = file.read()
