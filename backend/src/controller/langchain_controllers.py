@@ -8,6 +8,9 @@
 # from langchain.text_splitter import RecursiveCharacterTextSplitter
 # from langchain_openai.embeddings import OpenAIEmbeddings
 
+# 학습 자료 생성 시 vector DB를 참조하는 LANGCHAIN
+# vector DB를 참조하지 않는 일반 LANGCHAIN
+
 # load_dotenv()
 
 # api_key=os.getenv("OPENAI_API_KEY")
