@@ -78,7 +78,8 @@ async def chat_check_store(user_id, classroom_id, msg):
 
     return {"message": "It is JSON" if 'parsed_msg' in locals() else "It is message"} 
 
-async def chat_completion2(user_id: str, msg, classroom_id: str):
+#기본 챗에서의 챗
+async def chat_completion_classroom(user_id: str, msg, classroom_id: str):
     user = await collection.find_one({"id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
