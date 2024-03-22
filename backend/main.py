@@ -4,9 +4,9 @@ from fastapi import FastAPI, HTTPException, status, Depends, Header
 from src.models.user import User
 from src.db.connection import collection
 
-from src.controller.chat_controller import (chat_completion, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
+from src.controller.chat_controller import (chat_completion_concept, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
 from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
-from src.controller.concept_controller import (chat_check_store, store_concept, chat_completion2)
+from src.controller.concept_controller import (chat_check_store, store_concept, chat_completion_classroom)
 from src.controller.auth_controllers import (auth_get_current_user)
 
 # from fastapi.security import OAuth2PasswordRequestForm
@@ -59,14 +59,22 @@ async def get_all_class_concepts(classroom_id:str, user_id:dict = Depends(auth_g
     
 @app.post("/chat/new/{classroom_id}/{message}", response_model=list)
 async def post_new_chat(classroom_id:str, message: str, user_id:dict = Depends(auth_get_current_user)):
-    response = await chat_completion2(user_id["id"], message, classroom_id)
+    response = await chat_completion_classroom(user_id["id"], message, classroom_id)
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
+
+#!!!!!!!!!!!!!!!!!!!!!!!
+@app.post("/chat/concept/new/{classroom_id}/{message}/{concept_id}", response_model=list)
+async def post_new_chat_concept(classroom_id:str, message: str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await chat_completion_concept(user_id["id"], message, classroom_id, concept_id)
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")
     
-@app.get('/getconceptchats/{id}/{classroom_id}/{concept_id}')
-async def get_all_concept_chats(user_id:str,classroom_id:str, concept_id:str):
-    response = await get_concept_chat(user_id, classroom_id, concept_id)
+@app.get('/getconceptchats')
+async def get_all_concept_chats(concept_id:str, classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await get_concept_chat(user_id["id"], classroom_id, concept_id)
     if response:
         return response
     else:
@@ -153,7 +161,7 @@ async def post_chat_check_store(user_id:str, classroom_id:str, msg):
 
 @app.post("/user/chat/check/store/combine/{user_id}/{classroom_id}")
 async def post_chat_check_store2(user_id:str, classroom_id:str, msg):
-    response = await chat_completion2(user_id, classroom_id, msg)
+    response = await chat_completion_classroom(user_id, classroom_id, msg)
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")

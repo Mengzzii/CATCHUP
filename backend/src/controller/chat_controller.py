@@ -5,14 +5,25 @@ import uuid
 from ..config.openai_config import openai_config
 from ..models.user import Classroom
 
+#개념 챗방에서의 챗
+async def chat_completion_concept_advanced(user_id: str, msg, classroom_id, concept_id):
+    pipeline = [
+        {"$unwind": "$classroomList"},  # Unwind the classroomList array
+        {"$match": {"classroomList.classroomId": classroom_id}},  # Match documents with the given ID
+        {"$replaceRoot": {"newRoot": "$nested_data.inner_structure"}}  # Replace root with the inner_structure
+    ]
+    
+    result = collection.aggregate(pipeline)
+    inner_structure = list(result)
+    return 0
 
-async def chat_completion(user_id: str, msg, classroom_id):
+async def chat_completion_concept(user_id: str, msg, classroom_id, concept_id):
     # Retrieve the user from the database
     user = await collection.find_one({"id": user_id})
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Find the classroom by name
+    # Find the classroom by id
     target_classroom = None
     for classroom in user["classroomList"]:
         if classroom["classroomId"] == classroom_id:
@@ -21,9 +32,19 @@ async def chat_completion(user_id: str, msg, classroom_id):
 
     if target_classroom is None:
         raise HTTPException(status_code=404, detail=f"Classroom '{classroom_id}' not found")
+    
+    # Find concept by id
+    target_concept = None
+    for concept in target_classroom["conceptList"]:
+        if concept["conceptId"] == concept_id:
+            target_concept = concept
+            break
+
+    if target_concept is None:
+        raise HTTPException(status_code=404, detail=f"Classroom '{classroom_id}' not found")
 
     # Access the chatList from the target classroom
-    chat_list = target_classroom["chatList"]
+    chat_list = target_concept["chatList"]
 
     # grab chats of user to send
     chats_to_send = [{"role": chat["role"], "content": chat["content"]} for chat in chat_list]
@@ -31,7 +52,7 @@ async def chat_completion(user_id: str, msg, classroom_id):
 
     # Update the user in the database with the new chat
     new_chat = {"id": str(uuid.uuid4()),"content": msg, "role": "user"}
-    target_classroom["chatList"].append(new_chat)
+    target_concept["chatList"].append(new_chat)
     #user["chats"].append(new_chat)
 
     # send all chats with new one to openAI API
@@ -41,10 +62,15 @@ async def chat_completion(user_id: str, msg, classroom_id):
     chat_response = client.chat.completions.create( model="gpt-3.5-turbo", messages=chats_to_send)
     new_res = {"id": str(uuid.uuid4()),"content": chat_response.choices[0].message.content, "role": "assistant"}
     #user["chats"].append(new_res)
-    target_classroom["chatList"].append(new_res)
+    target_concept["chatList"].append(new_res)
 
     # Update the user's classroomList with the modified list
-    updated_classroom_list = [c for c in user["classroomList"] if c['classroomId'] != classroom_id]  # Remove existing classroom
+    updated_classroom_list = [classroom for classroom in user["classroomList"] if classroom['classroomId'] != classroom_id]  # Remove existing classroom
+
+    # Update the user's classroomList with the modified list
+    updated_concept_list = [concept for concept in target_classroom["conceptList"] if concept['conceptId'] != concept_id]  # Remove existing concept
+    updated_concept_list.append(target_concept)
+    target_classroom["conceptList"] = updated_concept_list
     updated_classroom_list.append(target_classroom)
 
     user["classroomList"] = updated_classroom_list
@@ -52,7 +78,7 @@ async def chat_completion(user_id: str, msg, classroom_id):
     result = await collection.update_one(
         {"id": user_id}, {"$set": user}
     )
-    return target_classroom["chatList"]
+    return target_concept["chatList"]
 
 async def get_sample_chat(id:str, classroom_id:str):
     print(id)
@@ -121,11 +147,9 @@ async def get_class_concepts(id:str, classroom_id:str):
     if target_classroom == None:
         raise HTTPException(status_code=404, detail=f"Classroom ID '{classroom_id}' not found")
     
-    concept_name_list = []
-    for concept in target_classroom["conceptList"]:
-        concept_name_list.append(concept["name"])
+    concept_list = [{"id": concept["conceptId"], "name": concept["name"]} for concept in target_classroom["conceptList"]]
     
-    return concept_name_list
+    return concept_list
 
 async def get_concept_list():
     course_name = 'Computer Algorithm'
@@ -134,12 +158,20 @@ async def get_concept_list():
   model="gpt-4-1106-preview",
   messages=[
     {
+      "role": "system",
+      "content": "You are a Professor of the course above. Please generate a list of essential prerequisites of this course in  specific mathematical concepts, \n narrowed enough to be covered within 20 minutes. \n\nGuidelines to formatting:\n- format : JSON \n- No  code block delimiter. \n- Contain the key \"concepts\" and  then place the concepts in a List format. \n- example : \n{\"concepts\": [ \n{\"name\": \"concept1\"}, \n{\"name\": \"concept2\"},\n{\"name\": \"concept3\"},\n ]}"
+    },
+    {
       "role": "user",
-      "content": f'''You are a Professor of a '{course_name}' course. Please generate a list of essential prerequisites of this course in  specific mathematical concepts, narrowed enough to be covered within 40 minutes. \n\nGuidelines to formatting:\n- Each concepts should be presented as a value in a JSON form. The key should be 'name'. \n- No  code block delimiter. No '\\n' or backslash('\') in output. \n- example :  [{{"name": "concept1"}}, {{"name": "concept2"}}, {{"name": "concept3"}}]'''
+      "content": "I want to take a 'Computer Algorithm' course. "
+    },
+    {
+      "role": "assistant",
+      "content": "{\n\"concepts\": [\n{\"name\": \"Basic Programming Constructs\"},\n{\"name\": \"Data Types and Variables\"},\n{\"name\": \"Control Structures (if-else, loops)\"},\n{\"name\": \"Functions and Recursion\"},\n{\"name\": \"Basic Data Structures (Arrays, Lists)\"},\n{\"name\": \"Complexity and Big O Notation\"},\n{\"name\": \"Basic Sorting Algorithms (e.g., Bubble Sort, Selection Sort)\"},\n{\"name\": \"Basic Searching Algorithms (e.g., Linear Search, Binary Search)\"}\n]}"
     }
   ],
   temperature=0.2,
-  max_tokens=564,
+  max_tokens=960,
   top_p=1,
   frequency_penalty=0,
   presence_penalty=0
