@@ -6,18 +6,48 @@ from ..config.openai_config import openai_config
 from ..models.user import Classroom
 
 #개념 챗방에서의 챗
-async def chat_completion_concept_advanced(user_id: str, msg, classroom_id, concept_id):
+async def chat_completion_concept(user_id: str, msg, classroom_id, concept_id):
     pipeline = [
         {"$unwind": "$classroomList"},  # Unwind the classroomList array
         {"$match": {"classroomList.classroomId": classroom_id}},  # Match documents with the given ID
-        {"$replaceRoot": {"newRoot": "$nested_data.inner_structure"}}  # Replace root with the inner_structure
+        {"$unwind": "$classroomList.conceptList"},  # Unwind the conceptList array
+        {"$match": {"classroomList.conceptList.conceptId": concept_id}},
+        {"$replaceRoot": {"newRoot": "$classroomList.conceptList"}},  # Replace root with the inner_structure
+        {"$project": { "name": 0, "conceptId": 0, "chatList": {"id": 0 }}}
     ]
     
-    result = collection.aggregate(pipeline)
-    inner_structure = list(result)
-    return 0
+    result = await collection.aggregate(pipeline).to_list(None)
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="Inner structure not found")
 
-async def chat_completion_concept(user_id: str, msg, classroom_id, concept_id):
+    # Send all chats with new one to openAI API
+    chats_to_send = result[0]["chatList"]
+    chats_to_send.append({"content": msg, "role": "user"})
+
+    client = openai_config()
+    res = client.chat.completions.create( model="gpt-3.5-turbo", messages=chats_to_send).choices[0].message.content
+    chats_to_send.append({"content": res, "role": "assistant"})
+
+    # # Update DB by appending msg & res
+    # ## 1. format (give ID/role) to each chat
+    db_res = {"id": str(uuid.uuid4()),"content": res, "role": "assistant"}
+    db_msg = {"id": str(uuid.uuid4()),"content": msg, "role": "user"}
+    ## 2. update
+    updated_user = await collection.update_one(
+        {"classroomList.classroomId": classroom_id},
+        {"$push": {"classroomList.$.conceptList.$[concept].chatList": {"$each":[db_msg,db_res]}}},
+        array_filters=[{"concept.conceptId": concept_id}]
+    )
+
+    if updated_user.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    # Return Updated Chatlist
+    return chats_to_send
+
+## 옛날꺼라 나중에 버리기------------------------------------------------------------------
+async def chat_completion_concept_deprecated(user_id: str, msg, classroom_id, concept_id):
     # Retrieve the user from the database
     user = await collection.find_one({"id": user_id})
     if user is None:
