@@ -144,3 +144,20 @@ async def post_new_chat_concept(classroom_id:str, message: str, concept_id:str, 
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")
+
+from src.controller.langchain_controllers import (langchain_conceptlist,langchain_qna)
+
+#랭체인 테스트--나중에 삭제예정
+@app.post("/test/answer0")
+async def langchain_check0(flag: int, course: str):
+    response = await langchain_conceptlist(flag, course)
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
+
+@app.post("/test/answer2")
+async def langchain_check2(flag: int, question: str, chat: str):
+    response = await langchain_qna(flag, question, chat)
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
