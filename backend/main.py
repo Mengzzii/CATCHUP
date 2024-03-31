@@ -6,7 +6,7 @@ from src.db.connection import collection
 
 from src.controller.chat_controller import (chat_completion_concept_deprecated, chat_completion_concept, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
 from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
-from src.controller.concept_controller import ( chat_completion_classroom)
+from src.controller.concept_controller import (chat_completion_classroom, chat_completion_supplement, chat_completion_qna)
 from src.controller.auth_controllers import (auth_get_current_user)
 
 # from fastapi.security import OAuth2PasswordRequestForm
@@ -103,7 +103,7 @@ async def post_user_login(user: User):
     token = await create_token(user.id)
     return {"success":"login successful", "token": token, "name": name}
 
-#Dashboard
+##Dashboard
 #User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
 async def get_all_classes(user_id: str):
     user = await collection.find_one({"id":user_id})
@@ -122,7 +122,39 @@ async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
     if response:
         return response
     raise HTTPException(400, "Something went wrong!")
-#Dashboard
+
+#User의 Classroom 속의 classroomid에 해당하는 classroomName을 수정한다.
+async def change_classroom_name(user_id: str, classroom_id: str):
+    user = await collection.find_one({"id":user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    classroom = None
+    for clsrm in user["classroomList"]:
+        if clsrm["classroomId"] == classroom_id:
+            classroom = clsrm
+            break
+    if not classroom:
+        raise HTTPException(status_code=404, detail="Classroom not found")
+##Dashboard
+    
+##ConceptChat
+##학습 자료 제공용 chat_completion - chat_completion_supplement
+@app.post("/chat/concept/supplement/{classroom_id}/{message}/{concept_id}", response_model=list)
+async def post_new_concept_supplement(classroom_id:str, message: str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await chat_completion_supplement(user_id["id"], message, classroom_id, concept_id)
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
+
+##기본 Q&A용 chat_completion - chat_completion_qna
+@app.post("/chat/concept/qna/{classroom_id}/{message}/{concept_id}", response_model=list)
+async def post_new_concept_qna(classroom_id:str, message: str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await chat_completion_qna(user_id["id"], message, classroom_id, concept_id)
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
+##ConceptChat
 
 @app.post("/user/classroom/new")
 async def post_create_classroom(user_id: dict = Depends(auth_get_current_user)):
