@@ -5,7 +5,12 @@ from ..config.openai_config import openai_config
 from ..db.connection import collection
 
 #학습 자료 제공용 chat_completion
+async def chat_completion_supplement():
+    return 0
+
 #기본 Q&A용 chat_completion
+async def chat_completion_qna():
+    return 0
 
 #기본 챗에서의 챗 - chat controller로 가져가고 import 된 곳 있으면 수정하기
 async def chat_completion_classroom(user_id: str, msg, classroom_id: str):

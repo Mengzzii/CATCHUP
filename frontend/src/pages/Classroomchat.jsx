@@ -1,3 +1,4 @@
+// 컨셉챗
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ChatItem from "../components/ChatItem";
 import ConceptItem from "../components/ConceptItem";
@@ -16,7 +17,7 @@ const getUserChats = async (classid, headers) => {
     if (res.status !== 200) {
       throw new Error("Unable to send chat");
     }
-    
+
     return res.data;
   } catch (error) {
     console.error("실패:", error.response.data.detail[0]);
@@ -42,31 +43,30 @@ const getClassConcepts = async (classid, headers) => {
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!개념별 chat 가져오는 함수
 const getConceptChats = async (classid, headers, concept_id) => {
-    try {
-      const res = await axios.get(`http://127.0.0.1:8000/getconceptchats`, {
+  try {
+    const res = await axios.get(`http://127.0.0.1:8000/getconceptchats`, {
       params: { classroom_id: classid, concept_id: concept_id },
-      headers: headers
+      headers: headers,
     });
-        if (res.status !== 200) {
-        throw new Error("Unable to send chat");
-  }
-  console.log("get Concept Chats / Response:", JSON.stringify(res, null, 2));
-  const data = await res.data;
-  return data;} 
-    catch (error) {
-      console.error("실패:", error.response.data.detail[0]);
+    if (res.status !== 200) {
+      throw new Error("Unable to send chat");
     }
-  
+    console.log("get Concept Chats / Response:", JSON.stringify(res, null, 2));
+    const data = await res.data;
+    return data;
+  } catch (error) {
+    console.error("실패:", error.response.data.detail[0]);
+  }
 };
 
 const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
-  if (isConceptChat){
-      const concept_id = isConceptChat;
-      try {
+  if (isConceptChat) {
+    const concept_id = isConceptChat;
+    try {
       const res = await axios.post(
         `http://127.0.0.1:8000/chat/concept/new/${classid}/${msg}/${concept_id}`,
         null,
-        { headers: headers}
+        { headers: headers }
       );
       const data = await res.data;
       console.log("Response:", JSON.stringify(data, null, 2));
@@ -74,9 +74,8 @@ const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
     } catch (error) {
       console.error("실패:", error.response.data);
     }
-  }
-  else {
-      try {
+  } else {
+    try {
       const res = await axios.post(
         `http://127.0.0.1:8000/chat/new/${classid}/${msg}`,
         null,
@@ -89,7 +88,6 @@ const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
       console.error("실패:", error.response.data);
     }
   }
-  
 };
 
 const Classroomchat = () => {
@@ -104,8 +102,7 @@ const Classroomchat = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [classConcepts, setClassConcepts] = useState([]);
 
-
-  const handleDefaultChatroom = async ()=>{
+  const handleDefaultChatroom = async () => {
     setIsConceptChat(0);
     getUserChats(classid, headers)
       .then((data) => {
@@ -115,7 +112,7 @@ const Classroomchat = () => {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   //Submit 함수
   const handleSubmit = async () => {
@@ -125,31 +122,35 @@ const Classroomchat = () => {
     }
     const newMessage = { role: "user", content };
     setChatMessages((prev) => [...prev, newMessage]);
-    const chatData = await sendChatRequest(isConceptChat, classid, content, headers);
+    const chatData = await sendChatRequest(
+      isConceptChat,
+      classid,
+      content,
+      headers
+    );
     setChatMessages([...chatData]);
   };
 
   //!!!!!!!!!!!!!!!!!!!!!!!!!
-  const handleConceptClick= async (concept_id)=>{
-      setIsConceptChat(concept_id);
-      getConceptChats(classid, headers, concept_id)
-        .then((data) => {
-          console.log("Successfully loaded CONCEPT chats DIctionary");
-          console.log("######chatData:", JSON.stringify(data, null, 2));
-          if (data && Array.isArray(data) && data.length > 0) {
+  const handleConceptClick = async (concept_id) => {
+    setIsConceptChat(concept_id);
+    getConceptChats(classid, headers, concept_id)
+      .then((data) => {
+        console.log("Successfully loaded CONCEPT chats DIctionary");
+        console.log("######chatData:", JSON.stringify(data, null, 2));
+        if (data && Array.isArray(data) && data.length > 0) {
           setChatMessages([...data]);
           console.log("######chatData:", JSON.stringify(data, null, 2));
-         } else {
-        // Clear chat messages if data is empty
-        setChatMessages([]);
-        console.log("No chat data available or data is empty.");
-    }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-
+        } else {
+          // Clear chat messages if data is empty
+          setChatMessages([]);
+          console.log("No chat data available or data is empty.");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useLayoutEffect(() => {
     getUserChats(classid, headers)
@@ -277,10 +278,13 @@ const Classroomchat = () => {
         >
           <button onClick={handleDefaultChatroom}>default chatroom</button>
 
-          {classConcepts.map((concept, index)=>
-                (<ConceptItem onClick={handleConceptClick} concept = {concept} key={index}></ConceptItem>))
-                  
-                }
+          {classConcepts.map((concept, index) => (
+            <ConceptItem
+              onClick={handleConceptClick}
+              concept={concept}
+              key={index}
+            ></ConceptItem>
+          ))}
         </div>
       </div>
     </div>
