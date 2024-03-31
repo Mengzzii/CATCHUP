@@ -7,8 +7,6 @@ from operator import itemgetter
 
 from langchain_community.document_loaders import TextLoader
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai.embeddings import OpenAIEmbeddings
 
 contextlist = []
 #기본챗방에서 개념리스트 반환용 프롬프트 엔지니어링
@@ -41,7 +39,15 @@ contextlist.append("""You are a Computer science professor.
 def langchain_model():
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
-    model = ChatOpenAI(openai_api_key=api_key, model="gpt-3.5-turbo")
+    model = ChatOpenAI(
+        openai_api_key=api_key, 
+        model="gpt-3.5-turbo",
+        temperature=1.00, 
+        max_tokens=1000,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
     return model
 
 def langchain_parser():
@@ -49,7 +55,6 @@ def langchain_parser():
     return parser
 
 def langchain_prompt():
-    #기본챗방인지 개념챗방인 q&a인지 구별해 각각 context적용 필요
     template = """
     Answer the question based on the context below.
     If you can't answer the question, reply "I don't know".
@@ -87,6 +92,7 @@ async def langchain_conceptlist(flag, course):
     translate_chain = (
     {"Answer": chain, "Language": itemgetter("Language")} | translate_prompt | model | parser
     )
+
     result = translate_chain.invoke({"Context": context, "Question": course, "Language": "Korean"})
     return result
 
@@ -109,8 +115,7 @@ async def langchain_learningmaterial(flag, concept):
     result = translate_chain.invoke({"Context": context, "Question": concept, "Language": "Korean"})
     return result
 
-
-#Q&A material
+#Q&A
 async def langchain_qna(flag, question, chat):
     prompt = langchain_prompt()
     model = langchain_model()
