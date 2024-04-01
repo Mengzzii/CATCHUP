@@ -9,6 +9,7 @@ from ..db.connection import collection
 #contextlist 1
 #vectorDB 접근 O
 #user_id를 안쓰고 어떻게 classroomList를 펼치는걸까? classroom_id가 고유해서 괜찮은건가??
+#그러게...
 async def chat_completion_supplement(user_id: str, msg, classroom_id, concept_id):
     pipeline = [
         {"$unwind": "$classroomList"},  # Unwind the classroomList array
@@ -155,3 +156,38 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id: str):
         {"$set": {"classroomList": user["classroomList"]}}
     )
     return target_classroom["chatList"]
+
+async def test_json(msg:str):
+    prompt = '''When the user tells a particular course, You are a Professor of that course. In that case, Please generate a list of essential prerequisites of this course in  specific mathematical concepts, narrowed enough to be covered within 20 minutes. Guidelines to formatting: - format : List of JSON - No  code block delimiter.  - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}] However, if the user doesn't mention any courses' name, just give basic advices as an assistant. '''
+    client = openai_config()
+    res = client.chat.completions.create( model="gpt-3.5-turbo", messages=[{"role": "system","content": prompt}, {"content": msg, "role": "user"}]).choices[0].message.content
+    result = None
+    try:
+        parsed_msg = json.loads(res)
+        # If parsing is successful, treat msg as JSON
+        print('!!!!!!!!!!!!!!!!!!!!!!!!')
+        print(parsed_msg)
+        concept_list = [{"name": concept["name"], "conceptId": str(uuid.uuid4()), "chatList": []} for concept in parsed_msg]
+
+        updated_user = await collection.update_one(
+        {"classroomList.classroomId": 'c96ed3ce-6f5d-4a57-abc9-85d3b9e01783'},
+        {"$push": {"classroomList.$.conceptList": {"$each":concept_list}}}
+    )   
+        result = concept_list
+
+        if updated_user.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Item not found")
+
+    except json.JSONDecodeError:
+        basic_res = {"id": str(uuid.uuid4()),"role": "assistant", "content": res}
+
+        updated_user = await collection.update_one(
+        {"classroomList.classroomId": 'c96ed3ce-6f5d-4a57-abc9-85d3b9e01783'},
+        {"$push": {"classroomList.$.chatList": basic_res}}
+    )
+        if updated_user.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Chat Item not found")
+        result = basic_res
+
+    # Return Updated Chatlist
+    return result
