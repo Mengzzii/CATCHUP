@@ -79,7 +79,7 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id):
 
         updated_user = await collection.update_one(
         {"classroomList.classroomId": classroom_id},
-        {"$push": {"classroomList.$.conceptList": {"$each":concept_list}}}
+        {"$push": {"classroomList.$.conceptList": {"$each":concept_list}, "classroomList.$.chatList": {"id": str(uuid.uuid4()), "role": "user","content": msg}}}
     )   
 
         if updated_user.matched_count == 0:
