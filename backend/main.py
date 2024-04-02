@@ -4,9 +4,9 @@ from fastapi import FastAPI, HTTPException, status, Depends, Header
 from src.models.user import User
 from src.db.connection import collection
 
-from src.controller.chat_controller import (chat_completion_concept_deprecated, chat_completion_concept, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
+from src.controller.chat_controller import (chat_completion_classroom, chat_completion_concept_deprecated, chat_completion_concept, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
 from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
-from src.controller.concept_controller import (chat_completion_classroom, chat_completion_supplement, chat_completion_qna, test_json)
+from src.controller.concept_controller import (chat_completion_supplement, chat_completion_qna)
 from src.controller.auth_controllers import (auth_get_current_user)
 
 # from fastapi.security import OAuth2PasswordRequestForm
@@ -62,7 +62,7 @@ async def post_new_chat(classroom_id:str, message: str, user_id:dict = Depends(a
     response = await chat_completion_classroom(user_id["id"], message, classroom_id)
     if response:
         return response
-    raise HTTPException(500, "Smth went wrong ;)")
+    raise HTTPException(400, "Smth went wrong ;)")
 
 #!!!!!!!!!!!!!!!!!!!!!!!
 @app.post("/chat/concept/new/{classroom_id}/{message}/{concept_id}", response_model=list)
@@ -186,19 +186,19 @@ async def test_json_recog(msg:str):
     raise HTTPException(500, "Smth went wrong ;)")
 
 
-from src.controller.langchain_controllers import (langchain_conceptlist,langchain_qna)
+# from src.controller.langchain_controllers import (langchain_conceptlist,langchain_qna)
 
-#랭체인 테스트--나중에 삭제예정
-@app.post("/test/answer0")
-async def langchain_check0(flag: int, course: str):
-    response = await langchain_conceptlist(flag, course)
-    if response:
-        return response
-    raise HTTPException(400, "Something went wrong!")
+# #랭체인 테스트--나중에 삭제예정
+# @app.post("/test/answer0")
+# async def langchain_check0(flag: int, course: str):
+#     response = await langchain_conceptlist(flag, course)
+#     if response:
+#         return response
+#     raise HTTPException(400, "Something went wrong!")
 
-@app.post("/test/answer2")
-async def langchain_check2(flag: int, question: str, chat: str):
-    response = await langchain_qna(flag, question, chat)
-    if response:
-        return response
-    raise HTTPException(400, "Something went wrong!")
+# @app.post("/test/answer2")
+# async def langchain_check2(flag: int, question: str, chat: str):
+#     response = await langchain_qna(flag, question, chat)
+#     if response:
+#         return response
+#     raise HTTPException(400, "Something went wrong!")
