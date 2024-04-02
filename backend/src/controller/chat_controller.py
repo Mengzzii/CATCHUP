@@ -50,7 +50,6 @@ async def chat_completion_concept(user_id: str, msg, classroom_id, concept_id):
 
 
 async def chat_completion_classroom(user_id: str, msg, classroom_id):
-
     pipeline = [
         {"$unwind": "$classroomList"},  # Unwind the classroomList array
         {"$match": {"classroomList.classroomId": classroom_id}},  # Match documents with the given ID
@@ -66,7 +65,7 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id):
     chats_to_send = result[0]["chatList"]
     chats_to_send.append({"content": msg, "role": "user"})
 
-    prompt = '''If the user doesn't mention any courses' name, just give basic advices as an assistant. However, when the user mentions a particular course's name, You act as a Professor of that course. In that case, Please generate a list of essential prerequisites of this course in  specific mathematical concepts, narrowed enough to be covered within 20 minutes. Guidelines to formatting: - format : List of JSON - No  code block delimiter. - Do not add other comments, only return the list of JSON. - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}]'''
+    prompt = '''If the user doesn't mention any name of a CE course, just give basic advices as an assistant. However, when the user mentions a particular course's name, You act as a Professor of that course. In that case, Please generate a list of essential prerequisites of this course in  specific mathematical concepts, narrowed enough to be covered within 20 minutes. Guidelines to formatting: - format : List of JSON - No  code block delimiter. - Do not add other comments, only return the list of JSON. - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}]'''
     client = openai_config()
     res = client.chat.completions.create( model="gpt-4-1106-preview", messages=[{"role": "system","content": prompt}]+ chats_to_send, temperature=0.2, max_tokens=960, top_p=1, frequency_penalty=0, presence_penalty=0).choices[0].message.content
     chats_to_send.append({"content": res, "role": "assistant"})
@@ -79,7 +78,7 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id):
         concept_list = [{"name": concept["name"], "conceptId": str(uuid.uuid4()), "chatList": []} for concept in parsed_msg]
 
         updated_user = await collection.update_one(
-        {"classroomList.classroomId": 'c96ed3ce-6f5d-4a57-abc9-85d3b9e01783'},
+        {"classroomList.classroomId": classroom_id},
         {"$push": {"classroomList.$.conceptList": {"$each":concept_list}}}
     )   
 
@@ -87,11 +86,12 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id):
             raise HTTPException(status_code=404, detail="Item not found")
 
     except json.JSONDecodeError:
+        print('??????????????????????????????')
         db_msg = {"id": str(uuid.uuid4()), "role": "user","content": msg}
         db_res = {"id": str(uuid.uuid4()),"role": "assistant", "content": res}
 
         updated_user = await collection.update_one(
-        {"classroomList.classroomId": 'c96ed3ce-6f5d-4a57-abc9-85d3b9e01783'},
+        {"classroomList.classroomId": classroom_id},
         {"$push": {"classroomList.$.chatList": {"$each":[db_msg,db_res]}}}
     )
         if updated_user.matched_count == 0:
@@ -221,26 +221,23 @@ async def chat_completion_classroom_deprecated(user_id: str, msg, classroom_id: 
     )
     return target_classroom["chatList"]
 
+#이름 바꾸기
 async def get_sample_chat(id:str, classroom_id:str):
-    print(id)
-    print(classroom_id)
-    user = await collection.find_one({"id":id})
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    target_classroom = None
+
+    pipeline = [
+        {"$unwind": "$classroomList"},  # Unwind the classroomList array
+        {"$match": {"classroomList.classroomId": classroom_id}},  # Match documents with the given ID
+        {"$replaceRoot": {"newRoot": "$classroomList"}},  # Replace root with the inner_structure
+        {"$project": {"classroomName":0, "classroomId":0,"conceptList":0, "chatList": { "id": 0}}}
+    ]
     
-    #find classroom
-    for classroom in user["classroomList"]:
-        if classroom["classroomId"]==classroom_id:
-            target_classroom = classroom
-            print(target_classroom)
-            break
+    result = await collection.aggregate(pipeline).to_list(None)
     
-    if target_classroom == None:
-        raise HTTPException(status_code=404, detail=f"Classroom ID '{classroom_id}' not found")
-    
-    chats_to_send = [{"role": chat["role"], "content": chat["content"]} for chat in target_classroom["chatList"]]
-    print(chats_to_send)
+    if not result:
+        raise HTTPException(status_code=404, detail="Inner structure not found")
+
+    chats_to_send = result[0]["chatList"]
+
     return chats_to_send
 
 async def get_concept_chat(id:str, classroom_id:str, concept_id:str):
