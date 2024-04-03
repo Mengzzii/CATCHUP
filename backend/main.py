@@ -140,12 +140,18 @@ async def change_classroom_name(user_id: str, classroom_id: str):
     
 ##ConceptChat
 ##학습 자료 제공용 chat_completion - chat_completion_supplement
-@app.post("/chat/concept/supplement/{classroom_id}/{message}/{concept_id}", response_model=list)
-async def post_new_concept_supplement(classroom_id:str, message: str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
-    response = await chat_completion_supplement(user_id["id"], message, classroom_id, concept_id)
+@app.post("/chat/concept/supplement/{classroom_id}/{concept_id}", response_model=list)
+async def post_new_concept_supplement(classroom_id:str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await chat_completion_supplement(user_id["id"], classroom_id, concept_id)
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")
+# @app.post("/chat/concept/supplement/{classroom_id}/{message}/{concept_id}", response_model=list)
+# async def post_new_concept_supplement(classroom_id:str, message: str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
+#     response = await chat_completion_supplement(user_id["id"], message, classroom_id, concept_id)
+#     if response:
+#         return response
+#     raise HTTPException(500, "Smth went wrong ;)")
 
 ##기본 Q&A용 chat_completion - chat_completion_qna
 @app.post("/chat/concept/qna/{classroom_id}/{message}/{concept_id}", response_model=list)
@@ -178,12 +184,12 @@ async def post_new_chat_concept(classroom_id:str, message: str, concept_id:str, 
     raise HTTPException(500, "Smth went wrong ;)")
 
 #삭제예정
-@app.post("/for/test")
-async def test_json_recog(msg:str):
-    response = await test_json(msg)
-    if response:
-        return response
-    raise HTTPException(500, "Smth went wrong ;)")
+# @app.post("/for/test")
+# async def test_json_recog(msg:str):
+#     response = await test_json(msg)
+#     if response:
+#         return response
+#     raise HTTPException(500, "Smth went wrong ;)")
 
 
 # from src.controller.langchain_controllers import (langchain_conceptlist,langchain_qna)
