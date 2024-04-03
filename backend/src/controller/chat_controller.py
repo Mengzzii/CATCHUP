@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from bson.objectid import ObjectId
 import uuid
 from ..config.openai_config import openai_config
+from .langchain_controllers import (langchain_conceptlist)
 from ..models.user import Classroom
 import json
 
@@ -65,15 +66,12 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id):
     chats_to_send = result[0]["chatList"]
     chats_to_send.append({"content": msg, "role": "user"})
 
-    prompt = '''If the user doesn't mention any name of a CE course, just give basic advices as an assistant. However, when the user mentions a particular course's name, You act as a Professor of that course. In that case, Please generate a list of essential prerequisites of this course in  specific mathematical concepts, narrowed enough to be covered within 20 minutes. Guidelines to formatting: - format : List of JSON - No  code block delimiter. - Do not add other comments, only return the list of JSON. - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}]'''
-    client = openai_config()
-    res = client.chat.completions.create( model="gpt-4-1106-preview", messages=[{"role": "system","content": prompt}]+ chats_to_send, temperature=0.2, max_tokens=960, top_p=1, frequency_penalty=0, presence_penalty=0).choices[0].message.content
-    chats_to_send.append({"content": res, "role": "assistant"})
+    res = await langchain_conceptlist(0, msg)
     
     try:
         parsed_msg = json.loads(res)
+        print(parsed_msg)
         # If parsing is successful, treat msg as JSON
-        print('!!!!!!!!!!!!!!!!!!!!!!!!')
         print(parsed_msg)
         concept_list = [{"name": concept["name"], "conceptId": str(uuid.uuid4()), "chatList": []} for concept in parsed_msg]
 
@@ -86,7 +84,6 @@ async def chat_completion_classroom(user_id: str, msg, classroom_id):
             raise HTTPException(status_code=404, detail="Item not found")
 
     except json.JSONDecodeError:
-        print('??????????????????????????????')
         db_msg = {"id": str(uuid.uuid4()), "role": "user","content": msg}
         db_res = {"id": str(uuid.uuid4()),"role": "assistant", "content": res}
 

@@ -11,15 +11,27 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 contextlist = []
 #기본챗방에서 개념리스트 반환용 프롬프트 엔지니어링
 # contextlist[0]
-contextlist.append("""You are a Computer science professor.
-                    If the student gives the course name, then you have to give an essential prerequisites concept list that is required to take that course. 
-                    Each concept should be narrowed enough to be covered within 30 minutes.
-                    Guidelines to formatting:
-                    - format: JSON
-                    - No code block delimiter.
-                    - Contain the key "concepts" and then place the concepts in a List format.
-                    - example: {"concepts": [{"name": "concept1"}, {"name": "concept2"},{"name": "concept3"}, ...]"""
-                    )
+# contextlist.append("""If the user doesn't mention any name of a CE course, just give basic advices as an assistant. 
+#                     However, when the user mentions a particular course's name, You act as a Professor of that course. 
+#                     In that case, please generate a list of essential prerequisites of this course in  specific mathematical concepts,
+#                     narrowed enough to be covered within 20 minutes. 
+#                     Guidelines to formatting:
+#                     - format: List of JSON
+#                     - No code block delimiter.
+#                     - Do not add other comments, only return the list of JSON.
+#                     - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}, ...]"""
+#                     )
+contextlist.append("""I'm trying to develop a chatbot tailored to assist struggling computer science students.
+                   When a user specifies a subject for study, you should promptly supply a concise yet comprehensive list of relevant concepts. 
+                   It is crucial that when presenting these concepts, they are meticulously broken down into granular units, including only the essential components pertinent to the subject matter. 
+                   For instance, instead of just listing the terms like "Sorting Algorithms," each algorithm like Bubble Sort, Selection Sort, Merge Sort, Quick Sort, and Radix Sort must be stored separately in db. 
+                   Furthermore, please ensure that each concept is prioritized, as we will follow this order for learning purposes. Additionally,  you want to store the provided list into MongoDB using a model called Concept, which includes the fields "name: str" . 
+                   So please print out the result in json format to facilitate entering this model.
+                      - format: List of JSON
+                      - No code block delimiter.
+                      - Do not add other comments, only return the list of JSON.
+                      - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}, ...]"""
+                   )
 #개념챗방에서 학습자료 제공용 프롬프트 엔지니어링
 # contextlist[1]
 contextlist.append("""You are a Computer science professor.
@@ -42,7 +54,7 @@ def langchain_model():
     model = ChatOpenAI(
         openai_api_key=api_key, 
         model="gpt-3.5-turbo",
-        temperature=1.00, 
+        temperature=1.0, 
         max_tokens=1000,
         top_p=1,
         frequency_penalty=0,
@@ -57,7 +69,7 @@ def langchain_parser():
 def langchain_prompt():
     template = """
     Answer the question based on the context below.
-    If you can't answer the question, reply "I don't know".
+    If you don't know the question, just reply naturally.
 
     Context: {Context}
 
