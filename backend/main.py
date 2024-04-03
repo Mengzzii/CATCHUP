@@ -5,7 +5,7 @@ from src.models.user import User
 from src.db.connection import collection
 
 from src.controller.chat_controller import (chat_completion_classroom, chat_completion_concept_deprecated, chat_completion_concept, get_sample_chat, get_class_concepts, get_concept_chat, get_concept_list)
-from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user)
+from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom, get_current_user,get_all_classes)
 from src.controller.concept_controller import (chat_completion_supplement, chat_completion_qna)
 from src.controller.auth_controllers import (auth_get_current_user)
 
@@ -104,18 +104,7 @@ async def post_user_login(user: User):
     return {"success":"login successful", "token": token, "name": name}
 
 ##Dashboard
-#User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
-async def get_all_classes(user_id: str):
-    user = await collection.find_one({"id":user_id})
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    class_name_id_List={}
-    for classroom in user["classroomList"]:
-        classId = classroom["classroomId"]
-        className = classroom["classroomName"]
-        class_name_id_List[classId] = className
-    return class_name_id_List
+
 @app.get("/user/dashboard")
 async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
     response = await get_all_classes(user_id["id"])
