@@ -15,6 +15,7 @@ langchain = "*"
 langchain-openai = "*"
 python-dotenv = "*"
 bcrypt = "*"
+streamlit = "*"
 
 [dev-packages]
 
