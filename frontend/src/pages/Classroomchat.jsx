@@ -60,11 +60,12 @@ const getConceptChats = async (classid, headers, concept_id) => {
 };
 
 const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
+  console.log(isConceptChat);
   if (isConceptChat) {
     const concept_id = isConceptChat;
     try {
       const res = await axios.post(
-        `http://127.0.0.1:8000/chat/concept/new/${classid}/${msg}/${concept_id}`,
+        `http://127.0.0.1:8000/chat/concept/qna/${classid}/${msg}/${concept_id}`,
         null,
         { headers: headers }
       );
