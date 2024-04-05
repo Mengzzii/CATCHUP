@@ -88,6 +88,7 @@ async def chat_completion_supplement_de(user_id: str, msg, classroom_id, concept
 
 #기본 Q&A용 chat_completion
 #contextlist 2, vectorDB 접근 X
+# 끝!!!!!!!!!!!!!!!!!!!!!!!!!!
 async def chat_completion_qna(user_id: str, msg, classroom_id, concept_id):
     pipeline = [
         {"$unwind": "$classroomList"},  # Unwind the classroomList array
@@ -106,7 +107,7 @@ async def chat_completion_qna(user_id: str, msg, classroom_id, concept_id):
     chats_to_send = result[0]["chatList"]
 
     question = msg
-    previous_chat = ", ".join([chat['content'] for chat in chats_to_send])
+    previous_chat = " "+", ".join([chat['content'] for chat in chats_to_send])
     res = await langchain_qna(2, question, previous_chat)
 
     # # Update DB by appending msg & res

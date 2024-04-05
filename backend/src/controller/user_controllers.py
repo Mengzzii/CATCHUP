@@ -77,3 +77,16 @@ async def create_classroom(user_id):
         {"$set": {"classroomList": [classroom.dict() for classroom in user.classroomList]}}
     )
     return new_classroom_id
+
+#User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
+async def get_all_classes(user_id: str):
+    user = await collection.find_one({"id":user_id})
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    class_name_id_List={}
+    for classroom in user["classroomList"]:
+        classId = classroom["classroomId"]
+        className = classroom["classroomName"]
+        class_name_id_List[classId] = className
+    return class_name_id_List

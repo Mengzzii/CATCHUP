@@ -104,7 +104,7 @@ const Classroomchat = () => {
   const [classConcepts, setClassConcepts] = useState([]);
 
   const handleDefaultChatroom = async () => {
-    setIsConceptChat(0);
+    setIsConceptChat(0)
     getUserChats(classid, headers)
       .then((data) => {
         setChatMessages([...data]);
@@ -135,6 +135,7 @@ const Classroomchat = () => {
   //!!!!!!!!!!!!!!!!!!!!!!!!!
   const handleConceptClick = async (concept_id) => {
     setIsConceptChat(concept_id);
+    console.log(concept_id)
     getConceptChats(classid, headers, concept_id)
       .then((data) => {
         console.log("Successfully loaded CONCEPT chats DIctionary");
