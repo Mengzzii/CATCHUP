@@ -16,6 +16,9 @@ langchain-openai = "*"
 python-dotenv = "*"
 bcrypt = "*"
 streamlit = "*"
+pypdf = "*"
+chromadb = "*"
+faiss-cpu = "*"
 
 [dev-packages]
 
