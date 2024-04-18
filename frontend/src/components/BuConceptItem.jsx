@@ -1,21 +1,16 @@
 import React from "react";
-import styles from "../css/Chat.module.css";
 
 const ConceptItem = ({ concept, onClick }) => {
   return (
     <div
-      // className={styles.conceptitem}
       style={{
         display: "flex",
-        width: "210px",
-        marginTop: "5px",
-        padding: "6px",
-        backgroundColor: "#f1f1f1",
+        padding: "2px",
+        backgroundColor: "#FB6D6D",
         gap: "2px",
         borderRadius: "2px",
-        fontSize: "17px",
-        cursor: "pointer",
-        justifyContent: "center",
+        marginTop: "1px",
+        fontSize: "20px",
       }}
       onClick={() => onClick(concept.id)}
     >

@@ -1,64 +1,47 @@
-import React from "react"
+import React from "react";
+import { Cookies } from "react-cookie";
+import TomatoIcon from "../components/TomatoIcon";
+import UserIcon from "../components/UserIcon";
 
-const ChatItem = ({content, role}) => {
+const ChatItem = ({ content, role }) => {
+  const cookie = new Cookies();
+  const messageBlocks = [content];
 
-    const messageBlocks = [content];
-
-    return role == "assistant"? (
-        <div style={{
-        display: "flex",
-        px: "2",
-        backgroundColor: "#FB6D6D",
-        gap: "2",
-        borderRadius: "2",
-        marginTop: "1"}}
-    >
-            <div>
-                <img />
-            </div>
-
-            <div>
-                {/* {!messageBlocks && (
+  return role == "assistant" ? (
+    <div>
+      <div style={{ fontWeight: "Bold" }}>
+        <TomatoIcon />
+        &nbsp; CATCHUP
+      </div>
+      {/* {!messageBlocks && (
                 <Typography sx={{ fontSize: "20px" }}>{content}</Typography>
                  )} */}
-            {messageBlocks &&
-              messageBlocks.length &&
-              messageBlocks.map((block) =>
-            
-              <div style={{ fontSize: "20px" }}>{block}</div>
-
-          )}
-            </div>
-
-        </div> 
-    ) : (
-        <div style={{
-        display: "flex",
-        px: "2",
-        backgroundColor: "#D9D9D9",
-        gap: "2",
-        borderRadius: "2",
-        marginTop: "1"}}
-    >
-            <div>
-                <img />
-            </div>
-
-            <div>
-                {/* {!messageBlocks && (
+      {messageBlocks &&
+        messageBlocks.length &&
+        messageBlocks.map((block) => (
+          <div style={{ fontSize: "17px" }}>{block}</div>
+        ))}
+      <br />
+    </div>
+  ) : (
+    <div>
+      <div style={{ fontWeight: "Bold" }}>
+        <UserIcon />
+        &nbsp;&nbsp;{cookie.get("name")}
+      </div>
+      <div>
+        {/* {!messageBlocks && (
                 <Typography sx={{ fontSize: "20px" }}>{content}</Typography>
                  )} */}
-            {messageBlocks &&
-              messageBlocks.length &&
-              messageBlocks.map((block) =>
-            
-              <div style={{ fontSize: "20px" }}>{block}</div>
-
-          )}
-            </div>
-            
-        </div> 
-    )
-}
+        {messageBlocks &&
+          messageBlocks.length &&
+          messageBlocks.map((block) => (
+            <div style={{ fontSize: "17px" }}>{block}</div>
+          ))}
+        <br />
+      </div>
+    </div>
+  );
+};
 
 export default ChatItem;
