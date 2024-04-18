@@ -11,10 +11,11 @@ from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 contextlist = []
 #기본챗방에서 개념리스트 반환용 프롬프트 엔지니어링
 # contextlist[0]
-contextlist.append("""I'm trying to develop a chatbot tailored to assist struggling computer science students.
+contextlist.append("""You are computer science professor.
+                   I'm trying to develop a chatbot tailored to assist struggling computer science students.
                    When a user specifies a subject for study, you should promptly supply a concise yet comprehensive list of relevant concepts. 
                    It is crucial that when presenting these concepts, they are meticulously broken down into granular units, including only the essential components pertinent to the subject matter. 
-                   For instance, instead of just listing the terms like "Sorting Algorithms," each algorithm like Bubble Sort, Selection Sort, Merge Sort, Quick Sort, and Radix Sort must be stored separately in db. 
+                   For instance, instead of just giving the terms like "Sorting Algorithms," each algorithm like Bubble Sort, Selection Sort, Merge Sort, Quick Sort, and Radix Sort must be stored separately in db. 
                    Furthermore, please ensure that each concept is prioritized, as we will follow this order for learning purposes. Additionally,  you want to store the provided list into MongoDB using a model called Concept, which includes the fields "name: str" . 
                    So please print out the result in json format to facilitate entering this model.
                       - format: List of JSON
@@ -26,9 +27,11 @@ contextlist.append("""I'm trying to develop a chatbot tailored to assist struggl
 # contextlist[1]
 contextlist.append("""You are a Computer science professor.
                     You will make learning materials based on the given materials and the given concepts.
-                    Learning materials should contain enough content for university students to understand, and the amount of content should be made so that the learning can be completed in 30-40 minutes.
-                    Most importantly, make the learning material only based on the given documents.
-                    Also, arrange the paragraph structure to make it easier for the student to read."""
+                    Learning materials should contain enough content for university students to understand,
+                    and the amount of content should be made so that the learning can be completed in 1 hour.
+                    SO, explain the contents in as much detail as possible at least 20 lines.
+                    Also, let me know the various theories related to the concept by referring to the given material.
+                    """
                     )
 #개념챗방에서 사용자 Q&A용 프롬프트 엔지니어링
 # contextlist[2]
@@ -67,11 +70,10 @@ def langchain_prompt():
     prompt = ChatPromptTemplate.from_template(template)
     return prompt
 
+from ..db.chromadbtest import (chromadb_main ,vectordb_store)
 def langchain_retriever(concept):
     # vetordb 참조하는 부분
-    #retriever = CHROMADB.as_retriever()
-    retriever = ""
-    retriever.invoke(concept)
+    retriever = chromadb_main(concept)
     return retriever
 
 def translate_input():
@@ -109,15 +111,13 @@ async def langchain_conceptlist(flag, course):
 
 #학습자료 생성(벡터디비 참조 랭체인)
 async def langchain_learningmaterial(flag, concept):
-    retriever = langchain_retriever(concept)
-    setup = RunnableParallel(context = retriever, question = RunnablePassthrough())
-    
+    material = chromadb_main(concept)
     prompt = langchain_prompt()
     model = langchain_model()
     parser = langchain_parser()
-    context = contextlist[flag]
+    context = contextlist[flag]+"\n concept: "+concept+"\n material: "+material
 
-    chain = setup | prompt | model | parser
+    chain = prompt | model | parser
 
     translate_prompt = langchain_translate_prompt()
     translate_chain = (
