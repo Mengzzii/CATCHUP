@@ -17,31 +17,31 @@ collection = chroma_client.get_or_create_collection(name="test")
 
 
 ## 1. PDF reader
-def load_docs(directory):
-    loader = PyPDFLoader(directory+"\\8. Binary Heaps.pdf")
-    docs = loader.load()
-    return docs
+# def load_docs(directory):
+#     loader = PyPDFLoader(directory+"\\8. Binary Heaps.pdf")
+#     docs = loader.load()
+#     return docs
 
-directory = "c:\\Users\\믕지\\OneDrive\\바탕 화면\\workout\\CATCHUP\\backend\\src\\data"
-### 2. text split
-def split_docs(docs):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000, chunk_overlap = 300)
-    documents = text_splitter.split_documents(docs)
-    text_documents = []
-    for document in documents:
-        text_documents.append(document.page_content)
-    return text_documents
+# directory = "c:\\Users\\믕지\\OneDrive\\바탕 화면\\workout\\CATCHUP\\backend\\src\\data"
+# ### 2. text split
+# def split_docs(docs):
+#     text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000, chunk_overlap = 300)
+#     documents = text_splitter.split_documents(docs)
+#     text_documents = []
+#     for document in documents:
+#         text_documents.append(document.page_content)
+#     return text_documents
 
-### 3. Vector Embedding and Vector Store
-docs = load_docs(directory)
-documents = split_docs(docs)
+# ### 3. Vector Embedding and Vector Store
+# docs = load_docs(directory)
+# documents = split_docs(docs)
 
-ids = [str(i) for i in range(len(documents))]
+# ids = [str(i) for i in range(len(documents))]
 
-collection.add(
-    documents=documents,
-    ids=ids
-)
+# collection.add(
+#     documents=documents,
+#     ids=ids
+# )
 
 
 
@@ -54,7 +54,7 @@ collection.add(
 # )
 
 # result = collection.query(
-#     query_texts=["bike"],
+#     query_texts=["array"],
 #     n_results=1
 # )
 

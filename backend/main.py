@@ -104,7 +104,6 @@ async def post_user_login(user: User):
     return {"success":"login successful", "token": token, "name": name}
 
 ##Dashboard
-
 @app.get("/user/dashboard")
 async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
     response = await get_all_classes(user_id["id"])

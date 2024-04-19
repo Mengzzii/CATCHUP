@@ -73,6 +73,3 @@ def chromadb_main(concept):
         document_content = documents[0][0]
 
     return document_content
-
-result = chromadb_main("array")
-print(result)

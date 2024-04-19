@@ -28,23 +28,23 @@ async def chat_completion_supplement(user_id: str, classroom_id, concept_id):
     chats_to_send = result[0]["chatList"]
     concept = result[0]["name"]
     print(concept)
-    # res = await langchain_learningmaterial(1, concept)
+    res = await langchain_learningmaterial(1, concept)
 
-    # #제공한 학습자료를 DB에 저장
-    # ## 1. format
-    # db_res = {"id": str(uuid.uuid4()),"content": res, "role": "assistant"}
-    # ## 2. update
-    # updated_user = await collection.update_one(
-    #     {"classroomList.classroomId": classroom_id},
-    #     {"$push": {"classroomList.$.conceptList.$[concept].chatList": {"$each":[db_res]}}},
-    #     array_filters=[{"concept.conceptId": concept_id}]
-    # )
+    #제공한 학습자료를 DB에 저장
+    ## 1. format
+    db_res = {"id": str(uuid.uuid4()),"content": res, "role": "assistant"}
+    ## 2. update
+    updated_user = await collection.update_one(
+        {"classroomList.classroomId": classroom_id},
+        {"$push": {"classroomList.$.conceptList.$[concept].chatList": {"$each":[db_res]}}},
+        array_filters=[{"concept.conceptId": concept_id}]
+    )
 
-    # if updated_user.matched_count == 0:
-    #     raise HTTPException(status_code=404, detail="Item not found")
+    if updated_user.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found")
 
-    # # Return Updated Chatlist
-    # chats_to_send.append({"content": res, "role": "assistant"})
+    # Return Updated Chatlist
+    chats_to_send.append({"content": res, "role": "assistant"})
     return chats_to_send
 
 #학습 자료 제공용 chat_completion 수정 전
