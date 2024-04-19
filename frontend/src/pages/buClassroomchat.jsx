@@ -6,10 +6,6 @@ import axios from "axios";
 import { IoMdSend } from "react-icons/io";
 import { Cookies } from "react-cookie";
 import { useParams } from "react-router-dom";
-import styles from "../css/Chat.module.css";
-import StylesL from "../css/Logo.module.css";
-import { useNavigate } from "react-router-dom";
-import HomeLogo2 from "../components/HomeLogo2.jsx";
 
 const getUserChats = async (classid, headers) => {
   try {
@@ -64,12 +60,11 @@ const getConceptChats = async (classid, headers, concept_id) => {
 };
 
 const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
-  console.log(isConceptChat);
   if (isConceptChat) {
     const concept_id = isConceptChat;
     try {
       const res = await axios.post(
-        `http://127.0.0.1:8000/chat/concept/qna/${classid}/${msg}/${concept_id}`,
+        `http://127.0.0.1:8000/chat/concept/new/${classid}/${msg}/${concept_id}`,
         null,
         { headers: headers }
       );
@@ -88,8 +83,6 @@ const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
       );
       const data = await res.data;
       console.log("Response:", JSON.stringify(data, null, 2));
-      window.location.replace(`/class/${classid}`);
-      // setRefresh((refresh) => refresh * -1);
       return data;
     } catch (error) {
       console.error("실패:", error.response.data);
@@ -103,16 +96,11 @@ const Classroomchat = () => {
   const headers = {
     token: token,
   };
-  const navigate = useNavigate();
-  const goHome = () => {
-    window.location.replace("/home");
-  };
   const { classid } = useParams();
   const inputRef = useRef(null);
   const [isConceptChat, setIsConceptChat] = useState(0);
   const [chatMessages, setChatMessages] = useState([]);
   const [classConcepts, setClassConcepts] = useState([]);
-  // const [refresh, setRefresh] = useState(1);
 
   const handleDefaultChatroom = async () => {
     setIsConceptChat(0);
@@ -185,84 +173,119 @@ const Classroomchat = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   getClassConcepts(classid, headers)
-  //     .then((data) => {
-  //       setClassConcepts([...data]);
-  //       console.log("Successfully loaded concepts");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   classConcepts.map((concept, index) => (
-  //     <ConceptItem
-  //       onClick={handleConceptClick}
-  //       concept={concept}
-  //       key={index}
-  //     ></ConceptItem>
-  //   ));
-  // }, [refresh]);
-
   return (
-    <div className={styles.page}>
-      <div className={styles.containerR}>
-        <div className={styles.left}>
-          <div className={styles.containerC}>
-            <div className={styles.lefttop}>
-              <div className={styles.ltBack}>
-                <h1 className={StylesL.logo_chat} onClick={goHome}>
-                  CATCHUP
-                </h1>
-              </div>
-              <div className={styles.ltClassname}>classroom name</div>
-            </div>
-            <div className={styles.leftmiddle}>
-              <div className={styles.containerC}>
-                {chatMessages.map((chat, index) => (
-                  <ChatItem
-                    content={chat.content}
-                    role={chat.role}
-                    key={index}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className={styles.leftbottom}>
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Have any question?"
-                className={styles.inputBlock}
-              />
-              <button onClick={handleSubmit} className={styles.button}>
-                <IoMdSend />
-              </button>
-            </div>
-          </div>
+    <div
+      style={{
+        //background
+        display: "flex",
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        marginTop: "1rem",
+        gap: "1rem",
+        border: "1px solid #ccc",
+        padding: "1rem",
+        backgroundColor: "#f0f0f0",
+        borderRadius: "5px",
+      }}
+    >
+      <div
+        style={{
+          //divied into <L> column section
+          display: "flex",
+          flex: 0.8,
+          flexDirection: "column",
+          paddingLeft: "3px",
+          paddingRight: "3px",
+          backgroundColor: "#767676",
+        }}
+      >
+        <div
+          style={{
+            //Chat section
+            width: "100%",
+            height: "60vh",
+            borderRadius: "3px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "scroll",
+            overflowX: "hidden",
+            overflowY: "auto",
+            scrollBehavior: "smooth",
+          }}
+        >
+          {chatMessages.map((chat, index) => (
+            <ChatItem content={chat.content} role={chat.role} key={index} />
+          ))}
         </div>
-        <div className={styles.right}>
-          <div className={styles.containerC}>
-            <div className={styles.righttop}>현재 개념</div>
-            <div className={styles.rightmiddle}>
-              <div>
-                <button onClick={handleDefaultChatroom}>
-                  default chatroom
-                </button>
-                {classConcepts.map((concept, index) => (
-                  <ConceptItem
-                    onClick={handleConceptClick}
-                    concept={concept}
-                    key={index}
-                  ></ConceptItem>
-                ))}
-              </div>
-            </div>
-            <div className={styles.rightbottom}>
-              <div className={styles.rbIcon} onClick={goHome}>
-                <HomeLogo2 className={styles.backIc} />
-              </div>
-            </div>
-          </div>
+
+        <div
+          style={{
+            //User Input section; Input bar
+            width: "100%",
+            borderRadius: "8px",
+            backgroundColor: "#FFA6A6",
+            display: "flex",
+            margin: "auto",
+          }}
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            style={{
+              //Input block
+              width: "100%",
+              backgroundColor: "transparent",
+              padding: "30px",
+              border: "none",
+              outline: "none",
+              color: "white",
+              fontSize: "20px",
+            }}
+          />
+
+          <button
+            onClick={handleSubmit}
+            style={{ color: "white", margin: "0 0.5rem" }}
+          >
+            <IoMdSend />
+          </button>
+        </div>
+      </div>
+
+      <div
+        style={{
+          //divied into <R> column section
+          display: "flex",
+          flex: 0.2,
+          backgroundColor: "#FFFFFF",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "60vh",
+            backgroundColor: "#FFFFFF",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            flexDirection: "column",
+            marginLeft: "3px",
+            marginRight: "3px",
+          }}
+        >
+          <button onClick={handleDefaultChatroom}>default chatroom</button>
+
+          {classConcepts.map((concept, index) => (
+            <ConceptItem
+              onClick={handleConceptClick}
+              concept={concept}
+              key={index}
+            ></ConceptItem>
+          ))}
         </div>
       </div>
     </div>

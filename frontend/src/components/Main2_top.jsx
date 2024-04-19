@@ -11,7 +11,7 @@ const Main2_top = () => {
   const logOut = () => {
     cookie.remove("token");
     cookie.remove("name");
-    navigate("/");
+    window.location.replace("/");
   };
 
   return (
