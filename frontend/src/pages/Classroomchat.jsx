@@ -231,7 +231,11 @@ const Classroomchat = () => {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Have any question?"
+                placeholder={
+                  isConceptChat
+                    ? "학습하면서 생기는 궁금한 점을 질문해보세요!"
+                    : "어떤 과목을 따라잡고 싶은가요?"
+                }
                 className={styles.inputBlock}
               />
               <button onClick={handleSubmit} className={styles.button}>

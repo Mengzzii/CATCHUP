@@ -70,6 +70,7 @@
   align-items: center;
   flex-shrink: 0;
   margin: 20px;
+  border: 0;
 }
 
 .newbtn {

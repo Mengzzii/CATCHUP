@@ -44,7 +44,7 @@
   background: #d8d6d6;
 }
 
-/* .conceptitem {
+.conceptitem {
   display: "flex";
   padding: "2px";
   background-color: "#FB6D6D";
@@ -52,7 +52,10 @@
   border-radius: "2px";
   margin-top: "1px";
   font-size: "20px";
-} */
+  align-items: center;
+  justify-content: center;
+  background-color: #febebe;
+}
 
 .left {
   flex-basis: 84%;
