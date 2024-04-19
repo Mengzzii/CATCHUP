@@ -30,17 +30,16 @@ directory = "c:\\Users\\믕지\\OneDrive\\바탕 화면\\workout\\CATCHUP\\backe
 
 ## 1. PDF reader
 def load_docs(directory):
-    loader = PyPDFLoader(directory+"\\Lecture 2.pdf")
+    loader = PyPDFLoader(directory+"\\2. Data Structure.pdf")
     docs = loader.load()
     return docs
 
 ### 2. text split
 def split_docs(docs):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size = 2000, chunk_overlap = 400)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000, chunk_overlap = 400)
     documents = text_splitter.split_documents(docs)
     return documents
 
-from ..db.vector_connection import collection
 ### 3. Vector Embedding and Vector Store
 def vectordb_store():
     docs = load_docs(directory)
@@ -60,11 +59,20 @@ def vectordb_store():
     vectordb.persist()
     return vectordb
 
+from .vector_connection import collection
 def chromadb_main(concept):
-    db = vectordb_store()
-    query = "what is " + concept
-    result = db.similarity_search(query)
-    return result[0].page_content
+    query = concept
 
-result = chromadb_main("queue")
+    result = collection.query(
+    query_texts=[query],
+    n_results=1
+    )
+
+    if result and 'documents' in result:
+        documents = result['documents']
+        document_content = documents[0][0]
+
+    return document_content
+
+result = chromadb_main("array")
 print(result)
