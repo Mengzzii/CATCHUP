@@ -1,11 +1,12 @@
 import uuid
 from fastapi import HTTPException, Request
 import bcrypt
-from src.models.user import Chat, Classroom, User
+from src.models.user import Classroom, User
 from ..db.connection import collection
 import datetime
 import jwt
 
+# 회원가입
 async def signup_user(user):
     existing_user = await collection.find_one({"email": user.email})
     if existing_user:
@@ -18,20 +19,20 @@ async def signup_user(user):
     collection.insert_one(document)
     return document
 
-#해당 id의 회원이 존재하는지 확인, 존재하면 해당 id를 가지는 객체 하나를 반환
+# 해당 id의 회원이 존재하는지 확인, 존재하면 해당 id를 가지는 객체 하나를 반환
 async def get_user(id):
     document = await collection.find_one({"id":id})
     return document
 
-#입력받은 비밀번호를 해당 id에 저장된 암호화된 비밀번호와 비교함
+# 입력받은 비밀번호를 해당 id에 저장된 암호화된 비밀번호와 비교함
 async def login_user(entered_password, exist_password):
     pw_entered = entered_password.encode('utf-8')
     pw_stored = exist_password.encode('utf-8')
     ps_match = bcrypt.checkpw(pw_entered, pw_stored)
     return ps_match
 
-#SECRET_KEY, ALGORITHM, TOKEN_EXPIRETIME 등으로 이후 환경변수 사용 권장
-#토큰 생성-유효기간은 1일로 설정함
+# SECRET_KEY, ALGORITHM, TOKEN_EXPIRETIME 등으로 이후 환경변수 사용 권장
+# 토큰 생성-유효기간은 1일로 설정함
 async def create_token(id):
     payload = {"id":id,
                "exp": datetime.datetime.utcnow()+datetime.timedelta(days=1)}
@@ -40,7 +41,7 @@ async def create_token(id):
     token = jwt.encode(payload, secret_key, algorithm)
     return token
 
-#토큰 유효성 검사_토큰을 받아서 유효한지 확인하고 해당 사용자id를 반환한다
+# 토큰 유효성 검사_토큰을 받아서 유효한지 확인하고 해당 사용자id를 반환한다
 async def get_current_user(token):
     secret_key = "mina0104"
     algorithm = "HS256"
@@ -78,7 +79,7 @@ async def create_classroom(user_id):
     )
     return new_classroom_id
 
-#User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
+# User가 가지고 있는 모든 Classroom의 classroomName과 classroomId를 반환한다.
 async def get_all_classes(user_id: str):
     user = await collection.find_one({"id":user_id})
     if user is None:
