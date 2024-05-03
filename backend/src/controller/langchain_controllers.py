@@ -4,12 +4,13 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
 from operator import itemgetter
-
+from ..db.chromadb import (chromadb_main)
 from langchain_community.document_loaders import TextLoader
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 
+# 프롬프트 엔지니어링 context 저장 배열
 contextlist = []
-#기본챗방에서 개념리스트 반환용 프롬프트 엔지니어링
+# 기본챗방에서 개념리스트 반환용 프롬프트 엔지니어링
 # contextlist[0]
 contextlist.append("""You are computer science professor.
                    I'm trying to develop a chatbot to assist struggling computer science students.
@@ -23,17 +24,17 @@ contextlist.append("""You are computer science professor.
                       - Do not add other comments, only return the list of JSON.
                       - example : [{"name":"concept1"}, {"name":"concept2"},{"name":"concept3"}, ...]"""
                    )
-#개념챗방에서 학습자료 제공용 프롬프트 엔지니어링
+# 학습자료 제공용 프롬프트 엔지니어링
 # contextlist[1]
 contextlist.append("""You are a Computer science professor.
-                    You will make learning materials based on the given materials and the given concepts.
-                    Learning materials should contain enough content for university students to understand,
-                    and the amount of content should be made so that the learning can be completed in 1 hour.
-                    SO, explain the contents in as much detail as possible at least 20 lines.
-                    Also, let me know the various theories related to the concept by referring to the given material.
+                    You will make learning resources for your freshman university student. 
+                    I'm going to give you the context, concept, and material you can refer to.
+                    You should make the learning resources based on context,  concept, and material.
+                    Learning resources should contain enough content to fully understand that specific concept and the amount of content should be made so that the learning can be completed in 1 hour. 
+                    So, explain the contents in as much detail as possible in expert-level writing with various examples related to the concept that can help students more easily understand.
                     """
                     )
-#개념챗방에서 사용자 Q&A용 프롬프트 엔지니어링
+# 개념챗방에서 Q&A용 프롬프트 엔지니어링
 # contextlist[2]
 contextlist.append("""You are a Computer science professor.
                     Please answer the question in as much detail as possible and kindly as possible
@@ -45,23 +46,31 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 
+# gpt model
+# open api gpt 모델 불러옴
 def langchain_model():
     model = ChatOpenAI(
         openai_api_key = api_key, 
         model = "gpt-3.5-turbo",
-        temperature = 0.8, 
-        max_tokens = 1000
+        temperature = 1.0, 
+        max_tokens = 4096
     )
     return model
 
+# parser
+# 내용만 가져오도록 함
 def langchain_parser():
     parser = StrOutputParser()
     return parser
 
+# prompt
+# 프롬프트 엔지니어링
 def langchain_prompt():
     template = """
-    Answer the question based on the context below.
-    If you don't understand the question, ignore the context and just reply naturally.
+    Answer the Question based on the context, PreviousChat, Material.
+    Context is the mandatory field but others are not.  So, If the prviousChat or Material is empty, ignore that specific field.
+    And Answer the Question as detailed as possible in expert-level.
+    If you don't understand the Question, ignore the context and just reply naturally.
 
     Context: {Context}
 
@@ -70,25 +79,28 @@ def langchain_prompt():
     prompt = ChatPromptTemplate.from_template(template)
     return prompt
 
-from ..db.chromadbtest import (chromadb_main ,vectordb_store)
+# retriever
+# vector db 참조
 def langchain_retriever(concept):
-    # vetordb 참조하는 부분
     retriever = chromadb_main(concept)
     return retriever
 
+# 사용자 입력을 영어로 변환
 def translate_input():
     translate_input = ChatPromptTemplate.from_template(
         "Translate {msg} to English"
     )
     return translate_input
 
+# gpt 답변을 지정 언어로 변환
 def langchain_translate_prompt():
     translate_prompt = ChatPromptTemplate.from_template(
     "Translate {Answer} to {Language}"
     )
     return translate_prompt
 
-#과목리스트 반환(일반 랭체인)
+
+# 개념 리스트 반환
 async def langchain_conceptlist(flag, course):
     prompt = langchain_prompt()
     model = langchain_model()
@@ -109,14 +121,13 @@ async def langchain_conceptlist(flag, course):
     result = translate_chain.invoke({"Context": context, "Question": message, "Language": "Korean"})
     return result
 
-#학습자료 생성(벡터디비 참조 랭체인)
+# 학습자료 생성(벡터디비 참조 랭체인)
 async def langchain_learningmaterial(flag, concept):
     material = chromadb_main(concept)
     prompt = langchain_prompt()
     model = langchain_model()
     parser = langchain_parser()
-    context = contextlist[flag]+"\n concept: "+concept+"\n material: "+material
-
+    context = contextlist[flag]+"\n[concept]\n"+concept+"\n[material]\n"+material
     chain = prompt | model | parser
 
     translate_prompt = langchain_translate_prompt()
@@ -126,15 +137,13 @@ async def langchain_learningmaterial(flag, concept):
     result = translate_chain.invoke({"Context": context, "Question": concept, "Language": "Korean"})
     return result
 
-#Q&A
+# Q&A
 async def langchain_qna(flag, question, chat):
     prompt = langchain_prompt()
     model = langchain_model()
     parser = langchain_parser()
     
-    context = contextlist[flag]
-    previous_chat = "\nprevious chat: " + chat
-    context += previous_chat
+    context = contextlist[flag]+"\n[Previous Chat]\n"+chat
 
     translate = translate_input()
     message_chain = translate | model | parser
