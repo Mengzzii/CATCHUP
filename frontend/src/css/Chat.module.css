@@ -44,19 +44,6 @@
   background: #d8d6d6;
 }
 
-.conceptitem {
-  display: "flex";
-  padding: "2px";
-  background-color: "#FB6D6D";
-  gap: "2px";
-  border-radius: "2px";
-  margin-top: "1px";
-  font-size: "20px";
-  align-items: center;
-  justify-content: center;
-  background-color: #febebe;
-}
-
 .left {
   flex-basis: 84%;
   display: flex;
@@ -74,7 +61,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-color: lightskyblue; */
 }
 .backIc {
   width: 1.6rem;
@@ -86,7 +72,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-color: lightsalmon; */
+  padding-right: 17%;
+  padding-left: 3%;
+  font-weight: bold;
 }
 .leftmiddle {
   flex-basis: 79%;
@@ -109,15 +97,28 @@
   /* background-color: grey; */
 }
 .righttop {
-  flex-basis: 8%;
+  flex-basis: 7.9%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #f9f9f9;
-  /* background-color: lightgreen; */
+  /* font-weight: bold; */
+}
+.rightline {
+  background-color: lightgray;
+  flex-basis: 0.1%;
+}
+.rightDefault {
+  flex-basis: 7%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  padding-bottom: 5px;
 }
 .rightmiddle {
-  flex-basis: 79%;
+  /* flex-basis: 79%;   */
+  flex-basis: 71.9%;
   display: flex;
   overflow: auto;
   flex-wrap: nowrap;
@@ -125,6 +126,61 @@
   justify-content: center;
   background-color: #f9f9f9;
 }
+
+.conceptname {
+  display: flex;
+  width: 210px;
+  margin-top: 5px;
+  padding: 6px;
+  background-color: #f9f9f9;
+  /* background-color: #f1f1f1; */
+  gap: 2px;
+  border-radius: 2px;
+  font-size: 17px;
+  cursor: pointer;
+  justify-content: center;
+}
+.conceptname:hover {
+  /* background: rgb(216, 215, 215); */
+  background-color: #f1f1f1;
+  .trashConcept {
+    display: flex;
+  }
+  .trashBt {
+    display: flex;
+  }
+}
+.trashConcept {
+  display: none;
+  width: 27px;
+  height: 20px;
+}
+.trashBt {
+  display: none;
+  width: 27px;
+  height: 23px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border-width: 0.5px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+}
+.trashBt:hover {
+  /* background-color: #f1f1f1; */
+  background-color: white;
+}
+.conceptL {
+  display: flex;
+  flex-basis: 85%;
+  justify-content: left;
+}
+.conceptR {
+  display: flex;
+  flex-basis: 15%;
+  justify-content: right;
+}
+
 .rightbottom {
   display: flex;
   flex-basis: 13%;

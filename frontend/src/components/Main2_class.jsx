@@ -4,13 +4,15 @@ import styles from "../css/Main2.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Cookies } from "react-cookie";
+import EditIcon from "../Icons/EditIcon";
+import TrashcanIcon from "../Icons/TrashcanIcon";
 
 const Main2_class = () => {
   const cookie = new Cookies();
   const navigate = useNavigate();
   const [classList, setClassList] = useState({});
-  const handleClassroom = async (id) => {
-    navigate(`/class/${id}`);
+  const handleClassroom = async (name, id) => {
+    navigate(`/class/${name}/${id}`);
   };
 
   const getClassList = async () => {
@@ -37,12 +39,20 @@ const Main2_class = () => {
   return (
     <div className={styles.classes}>
       {Object.entries(classList).map(([id, name]) => (
-        <Link to={`/class/${id}`} key={id}>
-          <div className={styles.classchat}>{name}</div>
+        <Link to={`/class/${name}/${id}`} className={styles.link} key={id}>
+          <div className={styles.classchat}>
+            <div className={styles.name}>{name}</div>
+            <div className={styles.icons}>
+              <button className={styles.editBt}>
+                <EditIcon className={styles.edit} />
+              </button>
+              <div>&nbsp;&nbsp;</div>
+              <button className={styles.trashBt}>
+                <TrashcanIcon className={styles.trashcan} />
+              </button>
+            </div>
+          </div>
         </Link>
-        // <button className={styles.classchat} onClick={handleClassroom(id)}>
-        //   {name}
-        // </button>
       ))}
     </div>
   );

@@ -4,6 +4,7 @@ import axios from "axios";
 import Form from "../components/Form";
 import Logo from "../components/Logo";
 import NormalButton from "../components/NormalButton";
+import Bstyles from "../css/NormalButton.module.css";
 import styles from "../css/Login.module.css";
 import { Cookies } from "react-cookie";
 
@@ -11,6 +12,7 @@ export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(0);
   const navigate = useNavigate();
   const cookie = new Cookies();
 
@@ -22,7 +24,9 @@ export default function Login() {
     }
   };
 
-  const handleLogin = async () => {
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    setIsError(0);
     try {
       const response = await axios.post("http://127.0.0.1:8000/user/login", {
         name: "",
@@ -36,8 +40,9 @@ export default function Login() {
       navigate("/home");
     } catch (error) {
       console.error("로그인 실패:", error.response.data);
+      setIsError(1);
       setErrorMessage(
-        "아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
+        `아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.`
       );
     }
   };
@@ -52,22 +57,26 @@ export default function Login() {
         <Logo />
       </span>
       <br />
-      <div className={styles.input}>
-        <div>
-          <Form text="아이디" setInput={setId} />
+      <form onSubmit={handleOnSubmit}>
+        <div className={styles.input}>
+          <div>
+            <Form text="아이디" setInput={setId} />
+          </div>
+          <br />
+          <div>
+            <Form text="비밀번호" setInput={setPassword} inputType="password" />
+          </div>
         </div>
         <br />
-        <div>
-          <Form text="비밀번호" setInput={setPassword} inputType="password" />
-        </div>
-      </div>
-      <br />
-      <br />
-      <NormalButton message={"로그인"} onClick={handleLogin} />
-      <Link to="/signup" className={styles.signup}>
-        <h5>회원가입</h5>
-      </Link>
-      {errorMessage && <div>{errorMessage}</div>}
+        <br />
+        <button className={Bstyles.NormalButton}>로그인</button>
+        {/* <NormalButton message={"로그인"} onClick={handleLogin} /> */}
+        <Link to="/signup" className={styles.signup}>
+          <h5>회원가입</h5>
+        </Link>
+        {/* {errorMessage && <div>{errorMessage}</div>} */}
+        {isError ? <div className={styles.fadeout}>{errorMessage}</div> : null}
+      </form>
     </div>
   );
 }

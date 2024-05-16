@@ -45,7 +45,7 @@ const getClassConcepts = async (classid, headers) => {
   }
 };
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!개념별 chat 가져오는 함수
+// concept별 chat 가져온다.
 const getConceptChats = async (classid, headers, concept_id) => {
   try {
     const res = await axios.get(`http://127.0.0.1:8000/getconceptchats`, {
@@ -63,6 +63,9 @@ const getConceptChats = async (classid, headers, concept_id) => {
   }
 };
 
+// chat의 종류를 isConceptChat 값을 통해 구분한다.
+// conceptchat일 경우: 질문챗으로 간주, 헤당하는 백의 엔드포인트 호출
+// conceptchat이 아닐 경우: 기본챗방: 목록받아오는 백의 엔드포인드 호출
 const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
   console.log(isConceptChat);
   if (isConceptChat) {
@@ -88,7 +91,7 @@ const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
       );
       const data = await res.data;
       console.log("Response:", JSON.stringify(data, null, 2));
-      window.location.replace(`/class/${classid}`);
+      window.location.replace(`/new/class/${classid}`);
       // setRefresh((refresh) => refresh * -1);
       return data;
     } catch (error) {
@@ -112,6 +115,8 @@ const Newclassroomchat = () => {
   const [isConceptChat, setIsConceptChat] = useState(0);
   const [chatMessages, setChatMessages] = useState([]);
   const [classConcepts, setClassConcepts] = useState([]);
+  const [isConceptEmpty, setIsConceptEmpty] = useState(1);
+  const [currentRoom, setCurrentRoom] = useState("default chatroom");
   // const [refresh, setRefresh] = useState(1);
 
   const handleDefaultChatroom = async () => {
@@ -126,7 +131,7 @@ const Newclassroomchat = () => {
       });
   };
 
-  //Submit 함수
+  // Submit 함수
   const handleSubmit = async () => {
     const content = inputRef.current?.value;
     if (inputRef && inputRef.current) {
@@ -143,20 +148,26 @@ const Newclassroomchat = () => {
     setChatMessages([...chatData]);
   };
 
-  //!!!!!!!!!!!!!!!!!!!!!!!!!
-  const handleConceptClick = async (concept_id) => {
+  // 리스트의 컨셉 개념 클릭했을 때
+  const handleConceptClick = async (concept_id, concept_name) => {
     setIsConceptChat(concept_id);
+    setCurrentRoom(concept_name);
     console.log(concept_id);
+    console.log(concept_name);
     getConceptChats(classid, headers, concept_id)
       .then((data) => {
-        console.log("Successfully loaded CONCEPT chats DIctionary");
-        console.log("######chatData:", JSON.stringify(data, null, 2));
+        console.log("Successfully loaded CONCEPT chats Dictionary");
+        // console.log("######chatData:", JSON.stringify(data, null, 2));
         if (data && Array.isArray(data) && data.length > 0) {
           setChatMessages([...data]);
+          setIsConceptEmpty(0);
+          console.log("isConceptEmpty: ", isConceptEmpty);
           console.log("######chatData:", JSON.stringify(data, null, 2));
         } else {
           // Clear chat messages if data is empty
           setChatMessages([]);
+          setIsConceptEmpty(1);
+          console.log("isConceptEmpty: ", isConceptEmpty);
           console.log("No chat data available or data is empty.");
         }
       })
@@ -184,24 +195,6 @@ const Newclassroomchat = () => {
         console.log(err);
       });
   }, []);
-
-  // useEffect(() => {
-  //   getClassConcepts(classid, headers)
-  //     .then((data) => {
-  //       setClassConcepts([...data]);
-  //       console.log("Successfully loaded concepts");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   classConcepts.map((concept, index) => (
-  //     <ConceptItem
-  //       onClick={handleConceptClick}
-  //       concept={concept}
-  //       key={index}
-  //     ></ConceptItem>
-  //   ));
-  // }, [refresh]);
 
   return (
     <div className={styles.page}>
@@ -246,7 +239,7 @@ const Newclassroomchat = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.containerC}>
-            <div className={styles.righttop}>현재 개념</div>
+            <div className={styles.righttop}>{currentRoom}</div>
             <div className={styles.rightmiddle}>
               <div>
                 <div onClick={handleDefaultChatroom}>default chatroom</div>

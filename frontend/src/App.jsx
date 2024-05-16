@@ -17,7 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Main1 />} />
         <Route path="/home" element={<Main2 />} />
-        <Route path="/class/:classid" element={<Classroomchat />} />
+        <Route path="/class/:className/:classid" element={<Classroomchat />} />
       </Routes>
     </BrowserRouter>
   );
