@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 8px;
+  font-size: 16.5px;
+}
+
+.line {
+  text-align: center;
+  align-items: "row";
+}
+
+.userText {
+  font-weight: bold;
+  color: rgb(255, 183, 183);
+}
+
+.startBt {
+  background-color: white;
+  border-width: 2px;
+  border-color: rgb(255, 183, 183);
+  border-style: double;
+  cursor: pointer;
+  margin-top: 6px;
+  width: 130px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 16px;
+  /* font-weight: bold; */
+}
+
+.startBt:hover {
+  background-color: #f9f9f9;
+}

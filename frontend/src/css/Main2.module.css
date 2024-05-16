@@ -56,6 +56,12 @@
   padding: 20px;
 }
 
+.link {
+  text-decoration-line: none;
+  color: black;
+  font-weight: 510;
+}
+
 .classchat {
   background: lightgrey;
   border-radius: 0.6rem;
@@ -71,6 +77,70 @@
   flex-shrink: 0;
   margin: 20px;
   border: 0;
+  flex-direction: column;
+}
+.classchat:hover {
+  background: rgb(199, 199, 199);
+  .edit {
+    display: flex;
+  }
+  .editBt {
+    display: flex;
+  }
+  .trashcan {
+    display: flex;
+  }
+  .trashBt {
+    display: flex;
+  }
+}
+
+.editBt {
+  display: none;
+  width: 29px;
+  height: 27px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border-width: 0.5px;
+  cursor: pointer;
+  background-color: rgb(199, 199, 199);
+}
+.edit {
+  display: none;
+}
+.editBt:hover {
+  background-color: #f1f1f1;
+}
+
+.trashBt {
+  display: none;
+  width: 29px;
+  height: 27px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border-width: 0.5px;
+  cursor: pointer;
+  background-color: rgb(199, 199, 199);
+}
+.trashcan {
+  display: none;
+}
+.trashBt:hover {
+  background-color: #f1f1f1;
+}
+
+.name {
+  display: flex;
+  flex-basis: 70%;
+  justify-content: center;
+  align-items: center;
+}
+.icons {
+  display: flex;
+  flex-basis: 30%;
+  flex-direction: row;
 }
 
 .newbtn {
@@ -83,6 +153,9 @@
   width: 60px;
   height: 60px;
 }
+.newbtn:hover {
+  background: #fd9d9d;
+}
 
 .logoutBt {
   background: #ffb7b7;
@@ -93,6 +166,9 @@
   border: none;
   width: 70px;
   height: 20px;
+}
+.logoutBt:hover {
+  background: #fd9d9d;
 }
 
 .cursor {

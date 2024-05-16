@@ -2,8 +2,8 @@ import * as React from "react";
 const HomeLogo2 = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="current"
-    height="current"
+    width="20px"
+    height="20px"
     viewBox="0 0 512.000000 512.000000"
     preserveAspectRatio="xMidYMid meet"
     {...props}

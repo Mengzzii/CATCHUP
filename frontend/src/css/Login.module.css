@@ -25,3 +25,17 @@
 .signup:hover {
   color: rgb(255, 183, 183);
 }
+
+.fadeout {
+  opacity: 0;
+  animation: fadeOut ease-in-out 3s;
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

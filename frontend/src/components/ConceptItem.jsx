@@ -1,26 +1,19 @@
 import React from "react";
 import styles from "../css/Chat.module.css";
+import Trashcan from "../Icons/TrashcanIcon.jsx";
 
 const ConceptItem = ({ concept, onClick }) => {
   return (
     <div
-      // className={styles.conceptitem}
-      style={{
-        display: "flex",
-        width: "210px",
-        marginTop: "5px",
-        padding: "6px",
-        backgroundColor: "#f1f1f1",
-        gap: "2px",
-        borderRadius: "2px",
-        fontSize: "17px",
-        cursor: "pointer",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick(concept.id)}
+      className={styles.conceptname}
+      onClick={() => onClick(concept.id, concept.name)}
     >
-      {" "}
-      {concept.name}
+      <div className={styles.conceptL}>&nbsp;{concept.name}</div>
+      <div className={styles.conceptR}>
+        <button className={styles.trashBt}>
+          <Trashcan className={styles.trashConcept}></Trashcan>
+        </button>
+      </div>
     </div>
   );
 };

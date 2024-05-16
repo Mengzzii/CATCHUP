@@ -4,7 +4,7 @@ from src.models.user import User
 from src.db.connection import collection
 
 from src.controller.chat_controller import (chat_completion_classroom, get_classroom_chat, get_class_concepts, get_concept_chat)
-from src.controller.user_controllers import (signup_user, get_user, login_user, create_token, create_classroom ,get_all_classes)
+from src.controller.user_controllers import (signup_user, login_user, create_classroom, change_classroom_name, delete_classroom, delete_classroom_concept, get_all_classes)
 from src.controller.concept_controller import (chat_completion_supplement, chat_completion_qna)
 from src.controller.auth_controllers import (auth_get_current_user)
 
@@ -105,19 +105,12 @@ async def post_user_signup(user: User):
 # POST: 로그인
 @app.post("/user/login")
 async def post_user_login(user: User):
-    #회원 존재하는지 확인
-    user_exist = await get_user(user.id)
-    if not user_exist:
-        raise HTTPException(404, "User not found")
-    #회원 존재하면 로그인
-    res = await login_user(user.password, user_exist['password'])
-    name = user_exist['name']
-    if not res:
-        raise HTTPException(401, detail="wrong pswd")
-    #토큰 생성-유효기간은 1일
-    token = await create_token(user.id)
-    return {"success":"login successful", "token": token, "name": name}
-
+        response = await login_user(user)
+        if response:
+            return response
+        else:
+            raise HTTPException(400, "Something went wrong!")
+        
 ## --------
 
 ## Dashboard 관리 BACKEND ----
@@ -131,19 +124,34 @@ async def get_classroomList(user_id: dict = Depends(auth_get_current_user)):
         return response
     raise HTTPException(400, "Something went wrong!")
 
-# User의 Classroom 속의 classroomid에 해당하는 classroomName을 수정
-async def change_classroom_name(user_id: str, classroom_id: str):
-    user = await collection.find_one({"id":user_id})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+# POST: ClassroomName 수정
+# 해당 사용자의 Classroom 속의 classroomid에 해당하는 classroomName을 수정함
+@app.post("/user/clsm/change/{classroom_id}/{new_classroom_name}")
+async def post_change_classroom_name(classroom_id:str, new_classroom_name:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await change_classroom_name(classroom_id, new_classroom_name, user_id["id"])
+    if response:
+        return response
+    raise HTTPException(400, "Something went wrong!")
     
-    classroom = None
-    for clsrm in user["classroomList"]:
-        if clsrm["classroomId"] == classroom_id:
-            classroom = clsrm
-            break
-    if not classroom:
-        raise HTTPException(status_code=404, detail="Classroom not found")
+# POST: Classroom 삭제
+# 해당 사용자의 Classroom 속의 classroomid에 해당하는 classroom을 삭제함
+@app.post("/user/clsm/delete/{classroom_id}")
+async def post_delete_classroom(classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
+
+    response = await delete_classroom(classroom_id, user_id["id"])
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
+
+# POST: 개념챗방 삭제
+# 해당 사용자의 Classroom 속의 classroomid에 해당하는 classroom 속의 해당 개념 챗방을 삭제함
+@app.post("/user/clsm/concept/delete/{classroom_id}/{concept_id}")
+async def post_delete_classroom_concept(classroom_id:str, concept_id:str, user_id:dict = Depends(auth_get_current_user)):
+    response = await delete_classroom_concept(classroom_id, concept_id, user_id["id"])
+    if response:
+        return response
+    raise HTTPException(500, "Smth went wrong ;)")
+
 
 # POST: 기본 챗방 생성
 # 새로운 기본 챗방을 생성함

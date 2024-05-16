@@ -1,7 +1,7 @@
 import React from "react";
 import { Cookies } from "react-cookie";
-import TomatoIcon from "../components/TomatoIcon";
-import UserIcon from "../components/UserIcon";
+import TomatoIcon from "../Icons/TomatoIcon";
+import UserIcon from "../Icons/UserIcon";
 
 const ChatItem = ({ content, role }) => {
   const cookie = new Cookies();
