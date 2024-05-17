@@ -1,5 +1,6 @@
 // "/new/class/${classid}"
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import useCheckLogin from "../hooks/useCheckLogin";
 import ChatItem from "../components/ChatItem";
 import ConceptItem from "../components/ConceptItem";
 import axios from "axios";
@@ -117,7 +118,8 @@ const Newclassroomchat = () => {
   const [classConcepts, setClassConcepts] = useState([]);
   const [isConceptEmpty, setIsConceptEmpty] = useState(1);
   const [currentRoom, setCurrentRoom] = useState("default chatroom");
-  // const [refresh, setRefresh] = useState(1);
+
+  useCheckLogin();
 
   const handleDefaultChatroom = async () => {
     setIsConceptChat(0);

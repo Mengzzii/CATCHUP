@@ -3,12 +3,12 @@ from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
-from .vector_connection import collection_material
+from vector_connection import collection_material
 from dotenv import load_dotenv
 load_dotenv()
 
 os.environ['OPENAI_API_KEY'] = os.getenv("OPENAI_API_KEY")
-
+'''
 directory = ""
 
 ## 1. PDF reader
@@ -36,7 +36,7 @@ def vectordb_store():
     )
     vectordb.persist()
     return vectordb
-
+'''
 def chromadb_main(concept):
     query = concept
 
@@ -50,3 +50,6 @@ def chromadb_main(concept):
         document_content = documents[0][0]
 
     return document_content
+
+result = chromadb_main("machine Learning")
+print (result)
