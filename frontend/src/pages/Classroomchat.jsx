@@ -1,5 +1,6 @@
 // 컨셉챗 "/class/${className}/${classid}"
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import useCheckLogin from "../hooks/useCheckLogin";
 import ChatItem from "../components/ChatItem";
 import ConceptItem from "../components/ConceptItem";
 import axios from "axios";
@@ -137,7 +138,8 @@ const Classroomchat = () => {
   const [classConcepts, setClassConcepts] = useState([]);
   const [isCurrentEmpty, setIsCurrentEmpty] = useState(1);
   const [currentRoom, setCurrentRoom] = useState("default chatroom");
-  // const [refresh, setRefresh] = useState(1);
+
+  useCheckLogin();
 
   const handleDefaultChatroom = async () => {
     setCurrentRoom("default chatroom");

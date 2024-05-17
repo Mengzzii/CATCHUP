@@ -1,4 +1,6 @@
 //"/home"_로그인 후 홈화면
+import { React } from "react";
+import useCheckLogin from "../hooks/useCheckLogin";
 import Main2_top from "../components/Main2_top";
 import Main2_new from "../components/Main2_new";
 import Main2_class from "../components/Main2_class";
@@ -6,6 +8,8 @@ import styles from "../css/Main2.module.css";
 import stylesL from "../css/Logo.module.css";
 
 function Main2() {
+  useCheckLogin();
+
   return (
     <div className={styles.home}>
       <div className={styles.container}>
