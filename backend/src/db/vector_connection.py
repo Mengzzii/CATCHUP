@@ -1,8 +1,6 @@
 import chromadb
 from dotenv import load_dotenv
 import os
-from langchain_community.document_loaders.pdf import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 
@@ -15,3 +13,4 @@ chroma_vm_public_ip = os.environ.get("CHROMA_DB_IP")
 chroma_client = chromadb.HttpClient(host=chroma_vm_public_ip, port=8000)
 vector_store = Chroma(embedding_function=embeddings)
 collection_material = chroma_client.get_or_create_collection(name="material")
+resource = chroma_client.get_or_create_collection(name="resource")
