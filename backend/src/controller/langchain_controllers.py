@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
 from operator import itemgetter
-from ..db.chromadb import (chromadb_main)
+from ..db.chromadb_connection import (chromadb_main)
 from langchain_community.document_loaders import TextLoader
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 

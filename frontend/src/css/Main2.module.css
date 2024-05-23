@@ -171,6 +171,104 @@
   background: #fd9d9d;
 }
 
+/* .message {
+  display: flex;
+  margin-left: 37%;
+} */
+
 .cursor {
   cursor: default;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  /* padding-top: 5px; */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  height: 40%;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+}
+
+.ModCon {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.ModTop {
+  display: flex;
+  flex-basis: 20%;
+  /* width: 100%; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.ModInput {
+  display: flex;
+  flex-basis: 60%;
+  /* width: 100%; */
+  justify-content: center;
+  align-items: center;
+}
+.ModBtns {
+  display: flex;
+  flex-basis: 20%;
+  /* width: 100%; */
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.textField {
+  width: 230px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  /* margin-right: 35px; */
+}
+.modEditBt {
+  background: #ffb7b7;
+  color: white;
+  font-size: 12px;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  border: none;
+  width: 130px;
+  height: 38px;
+  margin-right: 10px;
+}
+.modEditBt:hover {
+  background: #fd9d9d;
+  color: white;
+}
+
+.modCloseBt {
+  background: #ffb7b7;
+  /* background: lightgray; */
+  color: white;
+  font-size: 12px;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  border: none;
+  width: 130px;
+  height: 38px;
+}
+.modCloseBt:hover {
+  background: #fd9d9d;
+  /* background: rgb(199, 199, 199); */
+  color: white;
 }

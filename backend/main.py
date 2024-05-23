@@ -137,7 +137,6 @@ async def post_change_classroom_name(classroom_id:str, new_classroom_name:str, u
 # 해당 사용자의 Classroom 속의 classroomid에 해당하는 classroom을 삭제함
 @app.post("/user/clsm/delete/{classroom_id}")
 async def post_delete_classroom(classroom_id:str, user_id:dict = Depends(auth_get_current_user)):
-
     response = await delete_classroom(classroom_id, user_id["id"])
     if response:
         return response
@@ -151,7 +150,6 @@ async def post_delete_classroom_concept(classroom_id:str, concept_id:str, user_i
     if response:
         return response
     raise HTTPException(500, "Smth went wrong ;)")
-
 
 # POST: 기본 챗방 생성
 # 새로운 기본 챗방을 생성함

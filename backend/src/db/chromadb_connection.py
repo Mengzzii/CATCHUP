@@ -3,7 +3,7 @@ from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
-from vector_connection import collection_material
+from ..db.vector_connection import collection_material
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -50,6 +50,3 @@ def chromadb_main(concept):
         document_content = documents[0][0]
 
     return document_content
-
-result = chromadb_main("machine Learning")
-print (result)
