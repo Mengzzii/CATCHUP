@@ -2,7 +2,9 @@ import os
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
+
 from vector_connection import resource, collection_material
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -71,3 +73,4 @@ def chromadb_main(concept):
 
 # result = chromadb_main("""""")
 # print(result)
+
