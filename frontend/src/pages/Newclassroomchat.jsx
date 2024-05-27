@@ -1,19 +1,21 @@
 // "/new/class/${classid}"
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import useCheckLogin from "../hooks/useCheckLogin";
-import ChatItem from "../components/ChatItem";
-import ConceptItem from "../components/ConceptItem";
 import axios from "axios";
 import { IoMdSend } from "react-icons/io";
 import { Cookies } from "react-cookie";
-import { useParams } from "react-router-dom";
-import styles from "../css/Chat.module.css";
-import StylesL from "../css/Logo.module.css";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+
+import ChatItem from "../components/ChatItem";
+import ConceptItem from "../components/ConceptItem";
 import HomeLogo2 from "../components/HomeLogo2.jsx";
 import StartStudy from "../components/StartStudy.jsx";
 import StartBasic from "../components/StartBasic.jsx";
+import styles from "../css/Chat.module.css";
+import StylesL from "../css/Logo.module.css";
 import Loading from "../Icons/Loading.jsx";
+import EditIcon from "../Icons/EditIcon.jsx";
 
 const Newclassroomchat = () => {
   const cookie = new Cookies();
@@ -30,7 +32,7 @@ const Newclassroomchat = () => {
   {
     /* .................................................................... */
   }
-  const className = "New Classroom";
+  const [className, setClassName] = useState("New Classroom");
   {
     /* .................................................................... */
   }
@@ -43,6 +45,8 @@ const Newclassroomchat = () => {
   const [currentRoom, setCurrentRoom] = useState("default chatroom");
   const [isLoading, setIsLoading] = useState("false");
   const [loadingMsg, setLoadingMsg] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState("");
 
   useCheckLogin();
 
@@ -240,6 +244,30 @@ const Newclassroomchat = () => {
     handleConceptClick(isConceptChat, currentRoom);
   };
 
+  // 학습챗 이름 수정하기
+
+  const handleEdit = async () => {
+    try {
+      setClassName(newName);
+      console.log("msg: ", newName);
+      const res = await axios.post(
+        `http://127.0.0.1:8000/user/clsm/change/${classid}/${newName}`,
+        null,
+        { headers: headers }
+      );
+      if (res.status != 200) {
+        throw new Error("Unable to update classroom name");
+      }
+      // const data = await res.data;
+      // return data;
+      // setIsSuccess(true);
+    } catch (error) {
+      console.error("실패:", error.response.data.detail[0]);
+    }
+    setIsEditing(false);
+    window.location.replace(`/class/${newName}/${classid}`);
+  };
+
   useLayoutEffect(() => {
     setIsLoading(false);
     getUserChats(classid, headers)
@@ -273,6 +301,14 @@ const Newclassroomchat = () => {
                 </h1>
               </div>
               <div className={styles.ltClassname}>
+                <button
+                  className={styles.editBt}
+                  onClick={() => {
+                    setIsEditing(true);
+                  }}
+                >
+                  <EditIcon className={styles.edit} />
+                </button>
                 {className} &nbsp;
                 {`>`} &nbsp;
                 {currentRoom}
@@ -368,6 +404,41 @@ const Newclassroomchat = () => {
           </div>
         </div>
       </div>
+      <Modal
+        className={styles.modal}
+        isOpen={isEditing}
+        onRequestClose={() => setIsEditing(false)}
+      >
+        <div className={styles.ModCon}>
+          <div className={styles.ModTop}>
+            <h3>강의실 이름 수정하기</h3>
+            <div>현재 강의실 : {className}</div>
+          </div>
+          <div className={styles.ModInput}>
+            <input
+              className={styles.textField}
+              //value={name}
+              onChange={(e) => setNewName(e.target.value)}
+              type={"text"}
+              placeholder={"classroom name"}
+            ></input>
+          </div>
+          <div className={styles.ModBtns}>
+            <button className={styles.modEditBt} onClick={() => handleEdit()}>
+              수정하기
+            </button>
+            <button
+              className={styles.modCloseBt}
+              onClick={() => {
+                setIsEditing(false);
+                setNewName("");
+              }}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
