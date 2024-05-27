@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 
 const getUserChats = async (classid, headers) => {
   try {
-    const res = await axios.get("http://127.0.0.1:8000/user/getallchats", {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/getallchats`, {
       params: { classroom_id: classid },
       headers: headers,
     });
@@ -26,7 +26,7 @@ const getUserChats = async (classid, headers) => {
 
 const getClassConcepts = async (classid, headers) => {
   try {
-    const res = await axios.get(`http://127.0.0.1:8000/chat/getclassconcepts`, {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/chat/getclassconcepts`, {
       params: { classroom_id: classid },
       headers: headers,
     });
@@ -44,7 +44,7 @@ const getClassConcepts = async (classid, headers) => {
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!개념별 chat 가져오는 함수
 const getConceptChats = async (classid, headers, concept_id) => {
   try {
-    const res = await axios.get(`http://127.0.0.1:8000/getconceptchats`, {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/getconceptchats`, {
       params: { classroom_id: classid, concept_id: concept_id },
       headers: headers,
     });
@@ -64,7 +64,7 @@ const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
     const concept_id = isConceptChat;
     try {
       const res = await axios.post(
-        `http://127.0.0.1:8000/chat/concept/new/${classid}/${msg}/${concept_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/concept/new/${classid}/${msg}/${concept_id}`,
         null,
         { headers: headers }
       );
@@ -77,7 +77,7 @@ const sendChatRequest = async (isConceptChat, classid, msg, headers) => {
   } else {
     try {
       const res = await axios.post(
-        `http://127.0.0.1:8000/chat/new/${classid}/${msg}`,
+        `${import.meta.env.VITE_BACKEND_URL}/chat/new/${classid}/${msg}`,
         null,
         { headers: headers }
       );

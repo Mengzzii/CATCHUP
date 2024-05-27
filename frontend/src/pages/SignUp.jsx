@@ -23,7 +23,7 @@ export default function SignUp() {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/user/signup", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/signup`, {
         name: name,
         email: email,
         id: id,

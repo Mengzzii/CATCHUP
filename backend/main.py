@@ -8,13 +8,18 @@ from src.controller.user_controllers import (signup_user, login_user, create_cla
 from src.controller.concept_controller import (chat_completion_supplement, chat_completion_qna)
 from src.controller.auth_controllers import (auth_get_current_user)
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+frontend_url = os.getenv("FRONTEND_URL")
+
 # FastAPI의 CORS(Cross-Origin Resource Sharing)를 지원하는 미들웨어
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 # React 연결
 origins = [
-    "http://localhost:5173",
+    frontend_url,
 ]
 
 app.add_middleware(

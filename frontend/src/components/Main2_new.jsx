@@ -15,7 +15,7 @@ const Main2_new = () => {
     };
 
     await axios
-      .post("http://127.0.0.1:8000/user/classroom/new", null, { headers })
+      .post(`${import.meta.env.VITE_BACKEND_URL}/user/classroom/new`, null, { headers })
       .then((response) => {
         console.log("생성 성공:", response.data);
         const classid = response.data;

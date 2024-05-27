@@ -22,7 +22,7 @@ const Main2_class = () => {
     };
 
     await axios
-      .get("http://127.0.0.1:8000/user/dashboard", { headers })
+      .get(`${import.meta.env.VITE_BACKEND_URL}/user/dashboard`, { headers })
       .then((response) => {
         console.log("dashboard 성공:", response.data);
         setClassList(response.data);

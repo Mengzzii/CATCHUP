@@ -28,7 +28,7 @@ export default function Login() {
     e.preventDefault();
     setIsError(0);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/user/login", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`, {
         name: "",
         email: "dummy@email.com",
         id: id,
