@@ -55,6 +55,21 @@
   flex-shrink: 0;
   padding: 20px;
 }
+.classes::-webkit-scrollbar {
+  height: 13px; /* 스크롤바의 폭 너비 */
+  background-color: #f0f0f0; /* 스크롤 바의 배경색 */
+  border-radius: 7px; /* 스크롤바 둥근 테두리 */
+}
+.classes::-webkit-scrollbar-thumb {
+  background: #d8d6d6;
+  /* background: #ffb7b7; */
+  border-radius: 7px; /* 스크롤바 둥근 테두리 */
+}
+.classes::-webkit-scrollbar-thumb:hover {
+  background: rgb(199, 199, 199);
+  cursor: pointer;
+  /* background: #fd9d9d; */
+}
 
 .link {
   text-decoration-line: none;
