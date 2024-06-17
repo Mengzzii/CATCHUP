@@ -144,7 +144,7 @@
    	- user.py: FastAPI를 사용해 데이터 모델을 정의
 
 4. main.py: FastAPI를 사용해 구축된 API 서버의 엔드 포인트들을 정의
-<br><br>
+<br>
 #### [Frontend]
 1. Icons: 프론트에서 사용된 아이콘들 관련 코드
 
