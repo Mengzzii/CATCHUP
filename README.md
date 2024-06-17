@@ -125,7 +125,7 @@
 ├── Pipfile
 └── Pipfile.lock
 ```
-<br><br>
+
 ### 소스 코드 한 눈에 보기
 #### [Backend]
 1. controller: 각종 백엔드 함수와 관련된 소스 코드
@@ -141,6 +141,24 @@
 	- vector_connection.py: chromadb 및 OpenAI 연결 코드
 
 3. models: 데이터베이스에서 사용될 데이터 구조와 관련된 소스 코드
-  - user.py: FastAPI를 사용해 데이터 모델을 정의
+   	- user.py: FastAPI를 사용해 데이터 모델을 정의
 
 4. main.py: FastAPI를 사용해 구축된 API 서버의 엔드 포인트들을 정의
+<br><br>
+#### [Frontend]
+1. Icons: 프론트에서 사용된 아이콘들 관련 코드
+
+2. components: 페이지에서 사용될 각 컴포넌트 관련 코드
+
+3. css: 컴포넌트의 css를 선언한 코드
+
+4. hooks: React에서 사용자가 로그인 되어있는지 확인하는 코드 
+
+5. pages: 컴포넌트들을 활용해 필요한 화면들을 생성한 코드
+
+6. App.jsx: React의 라우팅을 관리하는 코드
+
+7. Main.jsx: React를 초기화하고 랜더링하는 코드
+
+8. index.html: React를 위해해 기본적인 구조를 정의하는 코드
+
