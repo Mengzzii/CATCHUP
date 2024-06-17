@@ -4,7 +4,7 @@
 ## 팀원 소개
 |유영민|강민아|임은지|
 |:---:|:---:|:---:|
-|![영민언니](https://github.com/Mengzzii/CATCHUP/assets/151775207/a844d7d5-8668-488f-bf35-4a7096b0e52b)|![민아언니](https://github.com/Mengzzii/CATCHUP/assets/151775207/9f13db75-7d6e-46ea-b9bd-33074a17c295)|![은지](https://github.com/Mengzzii/CATCHUP/assets/151775207/da8bf217-beec-4435-964a-aa8ceaf45d65)|
+|![영민언니](https://github.com/Mengzzii/CATCHUP/assets/151775207/13a3823a-f116-4928-9532-e242993cfbc5)|![민아언니](https://github.com/Mengzzii/CATCHUP/assets/151775207/9f13db75-7d6e-46ea-b9bd-33074a17c295)|![은지](https://github.com/Mengzzii/CATCHUP/assets/151775207/da8bf217-beec-4435-964a-aa8ceaf45d65)|
 |팀장, 백엔드, 서버|팀원, 백엔드, 프론트엔드|팀원, 백엔드, RAG|
 
 ## 개발 환경
