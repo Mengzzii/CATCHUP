@@ -125,7 +125,8 @@
 ├── Pipfile
 └── Pipfile.lock
 ```
-
+<br>
+	
 ### 소스 코드 한 눈에 보기
 #### [Backend]
 1. controller: 각종 백엔드 함수와 관련된 소스 코드
@@ -144,7 +145,9 @@
    	- user.py: FastAPI를 사용해 데이터 모델을 정의
 
 4. main.py: FastAPI를 사용해 구축된 API 서버의 엔드 포인트들을 정의
+
 <br>
+
 #### [Frontend]
 1. Icons: 프론트에서 사용된 아이콘들 관련 코드
 
