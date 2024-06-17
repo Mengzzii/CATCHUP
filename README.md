@@ -205,22 +205,26 @@ PyJWT
 ## Description of Data Structure
 #### MongoDB: FastAPI를 사용하여 구축된 백엔드 서버에 사용되는 데이터 모델 구조
 **1. Chat 데이터 모델**
+
 	- id: uuid를 사용해 생성된 고유한 채팅 ID
 	- role: user / system / assitant 각 채팅의 역할을 구분함
 	- content: 채팅의 내용을 저장
 <br>
 **2. Concept 데이터 모델**
+
 	- name: 개념 이름을 저장
 	- conceptId: uuid를 사용해 생성된 고유한 개념 챗방의 고유 ID
 	- chatList: 위 Chat 데이터 모델의 리스트, 해당 개념 챗방의 채팅 메시지들을 저장
 <br>
 **3. Classroom 데이터 모델**
+
 	- classroomName: 기본 챗방의 이름을 저장
 	- classroomId: uuid를 사용해 생성된 기본 챗방의 고유 ID
 	- conceptList: 위 Concept 데이터 모델의 리스트, 기본 챗방에 속한 개념 챗방을 저장
 	- chatList: 위 Chat 데이터 모델의 리스트, 해당 기본 챗방의 채팅 메시지들을 저장
 <br>
 **4. User 데이터 모델**
+
 	- name: 사용자의 이름을 저장
 	- email: 사용자의 이메일 주소를 저장, email 형태로만 저장
 	- id: 사용자의 아이디를 저장
@@ -230,6 +234,7 @@ PyJWT
 			- 최소 하나의 숫자를 포함
 			- 최소 하나의 알파벳을 포함
 	- classroomList: 위 Classroom 데이터 모델의 리스트 또는 None, 사용자의 기본 챗방들을 저장
+
 <br>
 #### Chroma DB: OpenAI의 임베딩 함수를 통해 각 자료들을 임베딩해 저장
 
