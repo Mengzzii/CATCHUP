@@ -210,12 +210,14 @@ PyJWT
 	- role: user / system / assitant 각 채팅의 역할을 구분함
 	- content: 채팅의 내용을 저장
 <br>
+
 **2. Concept 데이터 모델**
 
 	- name: 개념 이름을 저장
 	- conceptId: uuid를 사용해 생성된 고유한 개념 챗방의 고유 ID
 	- chatList: 위 Chat 데이터 모델의 리스트, 해당 개념 챗방의 채팅 메시지들을 저장
 <br>
+
 **3. Classroom 데이터 모델**
 
 	- classroomName: 기본 챗방의 이름을 저장
@@ -223,6 +225,7 @@ PyJWT
 	- conceptList: 위 Concept 데이터 모델의 리스트, 기본 챗방에 속한 개념 챗방을 저장
 	- chatList: 위 Chat 데이터 모델의 리스트, 해당 기본 챗방의 채팅 메시지들을 저장
 <br>
+
 **4. User 데이터 모델**
 
 	- name: 사용자의 이름을 저장
@@ -236,6 +239,7 @@ PyJWT
 	- classroomList: 위 Classroom 데이터 모델의 리스트 또는 None, 사용자의 기본 챗방들을 저장
 
 <br>
+
 #### Chroma DB: OpenAI의 임베딩 함수를 통해 각 자료들을 임베딩해 저장
 
 <br>
