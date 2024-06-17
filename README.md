@@ -126,4 +126,21 @@
 └── Pipfile.lock
 ```
 <br><br>
-### 소스 코드 설명
+### 소스 코드 한 눈에 보기
+#### [Backend]
+1. controller: 각종 백엔드 함수와 관련된 소스 코드
+	- auth_controllers.py: 사용자 인증 처리와 관련 코드
+	- chat_controller.py: 과목과 개념별 채팅 기록 관리 및 개념 리스트 제공 관련 코드
+	- concept_controller.py: 학습 자료 제공 및 사용자 질문에 대한 답변 관련 코드
+	- langchain_controllers.py: Langchain 및 OpenAI API를 활용한 개념 리스트 반환, 학습 자료 생성, Q&A 응답 처리 관련 코드
+	- user_controllers.py: 사용자 관리 관련 코드 (사용자 인증, 회원가입, 로그인, 강의실 생성 및 수정, 강의실 목록 조회, 강의실 삭제, 개념 챗방 삭제)
+
+2. db: 데이터베이스 연결 및 데이터베이스와 관련된 소스 코드
+	- chromadb_connection.py: 벡터 데이터 베이스 임베딩 및 문서 검색 관련 코드
+	- connection.py: mongodb 연결 코드
+	- vector_connection.py: chromadb 및 OpenAI 연결 코드
+
+3. models: 데이터베이스에서 사용될 데이터 구조와 관련된 소스 코드
+  - user.py: FastAPI를 사용해 데이터 모델을 정의
+
+4. main.py: FastAPI를 사용해 구축된 API 서버의 엔드 포인트들을 정의
