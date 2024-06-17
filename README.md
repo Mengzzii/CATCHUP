@@ -71,6 +71,7 @@
 │       │        │      .
 │       │        │      .
 │       │        │      └── UserIcon.jsx
+│       │        │
 │       │        ├── components
 │       │        │        ├── BuChatItem.jsx
 │       │        │        ├── BuConceptItem.jsx
