@@ -7,7 +7,7 @@
 |:---:|:---:|:---:|
 |<img src=https://github.com/Mengzzii/CATCHUP/assets/151775207/13a3823a-f116-4928-9532-e242993cfbc5 width=300 height=300/>|<img src=https://github.com/Mengzzii/CATCHUP/assets/151775207/9f13db75-7d6e-46ea-b9bd-33074a17c295 width=300 height=300/>|<img src=https://github.com/Mengzzii/CATCHUP/assets/151775207/da8bf217-beec-4435-964a-aa8ceaf45d65 width=300 height=300/>|
 |팀장, 백엔드, 서버|팀원, 백엔드, 프론트엔드|팀원, 백엔드, RAG|
-|@dlvocth|@|@Mengzzii|
+|@|@|@|
 <br><br>
 
 ## 개발 환경
@@ -26,7 +26,7 @@
 
 ## 프로젝트 구조 및 소스 코드 설명
 ### 프로젝트 구조
-├── **README.md**
+├── **README.md**<br>
 ├── **backend**
 │      ├── src
 │      │     ├── config
