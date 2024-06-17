@@ -24,38 +24,38 @@
 ***CATCHUP*** 프로젝트는 컴퓨터공학과 학생들이 방학 동안 선수학습 사항을 충족하여 학기 중 전공과목을 성공적으로 이수하도록 돕는 것을 목표로 합니다. 최소한의 공부 범위를 선별해 주고, 개념별 학습자료를 제공하며, 질문을 받아주는 LLM 챗봇 웹서비스를 기획하게 되었습니다.
 <br><br>
 
-## 프로젝트 구조 및 소스 코드 설명
+## 프로젝트 구조 및 소스 코드
 ### 프로젝트 구조
 ```
-├── **README.md**<br>
-├── **backend**<br>
-│      ├── src<br>
-│      │     ├── config<br>
-│      │     │     └── openai.config.py<br>
+├── **README.md**
+├── **backend**
+│      ├── src
+│      │     ├── config
+│      │     │     └── openai.config.py
 │      │     │<br>
 │      │     ├── controller<br>
-│      │     │        ├── auth_controllers.py<br>
-│      │     │        ├── chat_controllers.py<br>
-│      │     │        ├── concept_controller.py<br>
-│      │     │        ├── langchain_controllers.py<br>
-│      │     │        └── user_controllers.py<br>
-│      │     │<br>
-│      │     ├── db<br>
-│      │     │    ├── chromadb_connection.py<br>
-│      │     │    ├── connection.py<br>
-│      │     │    └── vector_connection.py<br>
-│      │     │<br>
-│      │     └── models<br>
-│      │           └── user.py<br>
-│      │<br>        
-│      ├── .gitignore<br>
-│      ├── Pipfile<br>
-│      ├── Pipfile.lock<br>
-│      ├── requirements.txt<br>
-│      └── main.py<br>
-│<br>            
-├── **frontend**<br>
-│       ├── src<br>
+│      │     │        ├── auth_controllers.py
+│      │     │        ├── chat_controllers.py
+│      │     │        ├── concept_controller.py
+│      │     │        ├── langchain_controllers.py
+│      │     │        └── user_controllers.py
+│      │     │
+│      │     ├── db
+│      │     │    ├── chromadb_connection.py
+│      │     │    ├── connection.py
+│      │     │    └── vector_connection.py
+│      │     │
+│      │     └── models
+│      │           └── user.py
+│      │       
+│      ├── .gitignore
+│      ├── Pipfile
+│      ├── Pipfile.lock
+│      ├── requirements.txt
+│      └── main.py
+│           
+├── **frontend**
+│       ├── src
 │       │        ├── Icons
 │       │        │      ├── Editicon.jsx
 │       │        │      ├── Loading.jsx
@@ -125,5 +125,5 @@
 ├── Pipfile
 └── Pipfile.lock
 ```
-
+<br><br>
 ### 소스 코드 설명
