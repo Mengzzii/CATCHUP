@@ -27,34 +27,34 @@
 ## 프로젝트 구조 및 소스 코드 설명
 ### 프로젝트 구조
 ├── **README.md**<br>
-├── **backend**
-│      ├── src
-│      │     ├── config
-│      │     │     └── openai.config.py
-│      │     │
-│      │     ├── controller
-│      │     │        ├── auth_controllers.py
-│      │     │        ├── chat_controllers.py
-│      │     │        ├── concept_controller.py
-│      │     │        ├── langchain_controllers.py
-│      │     │        └── user_controllers.py
-│      │     │
-│      │     ├── db
-│      │     │    ├── chromadb_connection.py
-│      │     │    ├── connection.py
-│      │     │    └── vector_connection.py
-│      │     │
-│      │     └── models
-│      │           └── user.py
-│      │            
-│      ├── .gitignore
-│      ├── Pipfile
-│      ├── Pipfile.lock
-│      ├── requirements.txt
-│      └── main.py
-│            
-├── **frontend**
-│       ├── src
+├── **backend**<br>
+│      ├── src<br>
+│      │     ├── config<br>
+│      │     │     └── openai.config.py<br>
+│      │     │<br>
+│      │     ├── controller<br>
+│      │     │        ├── auth_controllers.py<br>
+│      │     │        ├── chat_controllers.py<br>
+│      │     │        ├── concept_controller.py<br>
+│      │     │        ├── langchain_controllers.py<br>
+│      │     │        └── user_controllers.py<br>
+│      │     │<br>
+│      │     ├── db<br>
+│      │     │    ├── chromadb_connection.py<br>
+│      │     │    ├── connection.py<br>
+│      │     │    └── vector_connection.py<br>
+│      │     │<br>
+│      │     └── models<br>
+│      │           └── user.py<br>
+│      │<br>        
+│      ├── .gitignore<br>
+│      ├── Pipfile<br>
+│      ├── Pipfile.lock<br>
+│      ├── requirements.txt<br>
+│      └── main.py<br>
+│<br>            
+├── **frontend**<br>
+│       ├── src<br>
 │       │        ├── Icons
 │       │        │      ├── Editicon.jsx
 │       │        │      ├── Loading.jsx
