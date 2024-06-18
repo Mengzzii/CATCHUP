@@ -28,6 +28,8 @@
 
 ## 프로젝트 개요
 ***CATCHUP*** 프로젝트는 컴퓨터공학과 학생들이 방학 동안 선수학습 사항을 충족하여 학기 중 전공과목을 성공적으로 이수하도록 돕는 것을 목표로 합니다. 최소한의 공부 범위를 선별해 주고, 개념별 학습자료를 제공하며, 질문을 받아주는 LLM 챗봇 웹서비스를 기획하게 되었습니다.
+### 시스템 구조도
+<img src=https://github.com/Mengzzii/CATCHUP/assets/151775207/8378eeb5-83ae-48c0-aa7f-7359428db40a width=400 height=400/>
 
 <br>
 
@@ -185,29 +187,8 @@ FRONTEND_URL=<frontend_url>
 
 <br>
 
-## How to install
-다음은 이 프로젝트를 실행하기 위해 필수로 설치해야하는 dependencies 목록입니다.
-```
-pip install -r requirements.txt
-```
-requirements.txt
-```
-fastapi==0.109.2
-uvicorn==0.27.1
-motor==3.3.2
-langchain_openai
-langchain_community
-python-dotenv
-pydantic[email]
-langchain
-chromadb
-PyJWT
-```
-
-<br>
-
 ## Description of Data Structure
-#### MongoDB: FastAPI를 사용하여 구축된 백엔드 서버에 사용되는 데이터 모델 구조
+#### - MongoDB: FastAPI를 사용하여 구축된 백엔드 서버에 사용되는 데이터 모델 구조
 **1. Chat 데이터 모델**
 
 	- id: uuid를 사용해 생성된 고유한 채팅 ID
@@ -244,7 +225,28 @@ PyJWT
 
 <br>
 
-#### Chroma DB: OpenAI의 임베딩 함수를 통해 각 자료들을 임베딩해 저장
+#### - Chroma DB: OpenAI의 임베딩 함수를 통해 각 자료들을 임베딩해 저장
+
+<br>
+
+## How to install
+다음은 이 프로젝트를 실행하기 위해 필수로 설치해야하는 dependencies 목록입니다.
+```
+pip install -r requirements.txt
+```
+requirements.txt
+```
+fastapi==0.109.2
+uvicorn==0.27.1
+motor==3.3.2
+langchain_openai
+langchain_community
+python-dotenv
+pydantic[email]
+langchain
+chromadb
+PyJWT
+```
 
 <br>
 
