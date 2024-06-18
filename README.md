@@ -175,18 +175,6 @@
 
 <br>
 
-## How to build
-.env 파일 구조는 다음과 같습니다
-```
-MONGODB_USER_NAME=<your_mongodb_username>
-MONGODB_PASSWORD=<your_mongodb_password>
-OPENAI_API_KEY=<your_openai_api_key>
-CHROMA_DB_IP=<chroma_db_ip_address>
-FRONTEND_URL=<frontend_url>
-```
-
-<br>
-
 ## Description of Data Structure
 #### - MongoDB: FastAPI를 사용하여 구축된 백엔드 서버에 사용되는 데이터 모델 구조
 **1. Chat 데이터 모델**
@@ -226,6 +214,18 @@ FRONTEND_URL=<frontend_url>
 <br>
 
 #### - Chroma DB: OpenAI의 임베딩 함수를 통해 각 자료들을 임베딩해 저장
+
+<br>
+
+## How to build
+.env 파일 구조는 다음과 같습니다
+```
+MONGODB_USER_NAME=<your_mongodb_username>
+MONGODB_PASSWORD=<your_mongodb_password>
+OPENAI_API_KEY=<your_openai_api_key>
+CHROMA_DB_IP=<chroma_db_ip_address>
+FRONTEND_URL=<frontend_url>
+```
 
 <br>
 
