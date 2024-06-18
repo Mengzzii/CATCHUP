@@ -277,10 +277,12 @@ pip install -r requirements.txt
 4. .env 파일을 설정합니다
    	- .env 파일을 프로젝트 루트 디렉토리에 생성하고 위의 환경 설정 섹션에 명시된 대로 값을 입력합니다.
 
+5. 자료들을 ChromaDB에 임베딩 합니다.
+   
 6. 서버를 시작합니다.
 ```
 uvicorn main:app --reload
 npm run dev
 ```
 
-6. 웹 브라우저에서 http://<frontend_url>을 열어 챗봇 웹서비스를 확인합니다.
+7. 웹 브라우저에서 http://<frontend_url>을 열어 챗봇 웹서비스를 확인합니다.
